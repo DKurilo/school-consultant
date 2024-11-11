@@ -1,0 +1,22 @@
+{
+  "name": "school-consultant",
+  "version": "1.0.0",
+  "description": "Build personalized recommendations about school for your child",
+  "main": "packages/api-fast-and=dirty/index.ts",
+  "scripts": {
+    "test": "echo 'not implemented'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DKurilo/school-consultant.git"
+  },
+  "keywords": [
+    "schools"
+  ],
+  "author": "Dima Kurilo <dkurilo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/DKurilo/school-consultant/issues"
+  },
+  "homepage": "https://github.com/DKurilo/school-consultant#readme"
+}
