@@ -2,9 +2,12 @@
   "name": "school-consultant",
   "version": "1.0.0",
   "description": "Build personalized recommendations about school for your child",
-  "main": "packages/api-fast-and=dirty/index.ts",
+  "main": "packages/api-fast-and=dirty/src/index.ts",
   "scripts": {
-    "test": "echo 'not implemented'"
+    "test": "npm run test --workspaces --if-present",
+    "build": "npm run build --workspaces --if-present",
+    "start": "npm run start --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
   },
   "repository": {
     "type": "git",
@@ -13,10 +16,28 @@
   "keywords": [
     "schools"
   ],
+  "workspaces": [
+    "packages/fe-fast-and-dirty",
+    "packages/api-fast-and-dirty"
+  ],
   "author": "Dima Kurilo <dkurilo@gmail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/DKurilo/school-consultant/issues"
   },
-  "homepage": "https://github.com/DKurilo/school-consultant#readme"
+  "homepage": "https://github.com/DKurilo/school-consultant#readme",
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.1.0",
+    "@eslint/js": "^9.14.0",
+    "@types/eslint__eslintrc": "^2.1.2",
+    "@types/eslint__js": "^8.42.3",
+    "eslint": "^9.14.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-workspaces": "^0.10.1",
+    "prettier": "^3.3.3",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.14.0"
+  }
 }

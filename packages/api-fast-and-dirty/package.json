@@ -1,0 +1,21 @@
+{
+  "name": "api-fast-and-dirty",
+  "version": "1.0.0",
+  "description": "api for school consutant",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'not implemented'",
+    "build": "tsc -p tsconfig.json",
+    "start": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "lint": "eslint --fix ."
+  },
+  "author": "Dima Kurilo<dkurilo@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "fastify": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "ts-node-dev": "^2.0.0"
+  }
+}

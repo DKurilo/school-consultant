@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "../dist/fe-fast-and-dirty",
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es5", "es6", "dom"],
+    "jsx": "react",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "downlevelIteration": true,
+    "rootDir": "."
+  }
+}
