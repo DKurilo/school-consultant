@@ -17,6 +17,7 @@
     "schools"
   ],
   "workspaces": [
+    "packages/common",
     "packages/fe-fast-and-dirty",
     "packages/api-fast-and-dirty"
   ],
@@ -39,5 +40,8 @@
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.14.0"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
   }
 }
