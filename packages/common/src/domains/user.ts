@@ -7,6 +7,7 @@ export const UserParser = z.object({
   passSalt: z.string(),
   refreshToken: z.string().optional(),
   children: z.array(ChildParser),
+  attemptsLeft: z.number(),
 });
 
 export type User = z.infer<typeof UserParser>;

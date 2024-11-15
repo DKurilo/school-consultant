@@ -3,7 +3,6 @@ import { RecommendationParser } from "./recommendation";
 
 export const ChildParser = z.object({
   name: z.string(),
-  attemptsLeft: z.number(),
   recommendations: z.array(RecommendationParser),
 });
 

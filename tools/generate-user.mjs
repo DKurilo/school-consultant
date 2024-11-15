@@ -4,6 +4,7 @@ import {resolve} from 'node:path';
 
 const main = async () => {
   const email = process.argv[2];
+  const attemptsLeft = parseInt(process.argv[3], 10);
   const fileName = Buffer.from(email).toString('base64url');
   const filePath = resolve(import.meta.dirname, '..', 'packages', 'api-fast-and-dirty', 'storage', fileName);
   const abc = 'abcdefghijclmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}[]|\\;:\'"<>,.?/`~';
@@ -14,7 +15,8 @@ const main = async () => {
     email,
     passHash: hash,
     passSalt: salt,
-    children: []
+    children: [],
+    attemptsLeft,
   };
   writeFile(filePath, JSON.stringify(user, null, '  '));
   console.log(`password for user ${email} is ${password}`);
