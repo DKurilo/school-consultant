@@ -10,7 +10,7 @@
     "lint": "eslint --fix ."
   },
   "author": "Dima Kurilo<dkurilo@gmail.com>",
-  "license": "MIT",
+  "license": "ISC",
   "dependencies": {
     "@fastify/cors": "^10.0.1",
     "@school-consultant/common": "*",

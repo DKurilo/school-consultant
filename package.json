@@ -22,7 +22,7 @@
     "packages/api-fast-and-dirty"
   ],
   "author": "Dima Kurilo <dkurilo@gmail.com>",
-  "license": "MIT",
+  "license": "ISC",
   "bugs": {
     "url": "https://github.com/DKurilo/school-consultant/issues"
   },
