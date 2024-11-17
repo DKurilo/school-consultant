@@ -10,7 +10,7 @@ export class RefreshToken implements IRefreshToken {
   private logger: ILogger;
   private userGetter: IUserGetter;
   private userPreserver: IUserPreserver;
-  private tockenChecker: ITokenChecker;
+  private tokenChecker: ITokenChecker;
   private tokenGenerator: ITokenGenerator;
 
   public constructor(
@@ -18,18 +18,18 @@ export class RefreshToken implements IRefreshToken {
     userGetter: IUserGetter,
     userPreserver: IUserPreserver,
     tokenGenerator: ITokenGenerator,
-    tockenChecker: ITokenChecker,
+    tokenChecker: ITokenChecker,
   ) {
     this.logger = logger;
     this.userGetter = userGetter;
     this.userPreserver = userPreserver;
     this.tokenGenerator = tokenGenerator;
-    this.tockenChecker = tockenChecker;
+    this.tokenChecker = tokenChecker;
   }
 
   private async getTokenContent(token: string): Promise<Token | undefined> {
     try {
-      const tokenContent = await this.tockenChecker.verify(token);
+      const tokenContent = await this.tokenChecker.verify(token);
       return tokenContent;
     } catch (e) {
       this.logger.debug(

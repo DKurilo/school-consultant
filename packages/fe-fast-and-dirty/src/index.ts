@@ -15,6 +15,11 @@ import { ITokensRefresher } from "./ports/tokens-refresher";
 import { Authenticate } from "./usecases/authenticate";
 import { CheckIfAuthenticated } from "./usecases/check-if-authenticated";
 import { RefreshTokens } from "./usecases/refresh-tokens";
+import { GetUser } from "./usecases/get-user";
+import { IUserGetter } from "./ports/user-getter";
+import { UserGetter } from "./gateways/user-getter";
+import {AddChild} from "./usecases/add-child";
+import {ChildAdder} from "./gateways/child-adder";
 
 declare let WEBPACK_CONFIG: unknown;
 
@@ -43,12 +48,18 @@ const main = () => {
     tokensPreserver,
   );
   const checkIfAuthenticatedUsecase = new CheckIfAuthenticated(storage);
+  const userGetter: IUserGetter = new UserGetter(serverUrl);
+  const getUserUsecase = new GetUser(tokensGetter, userGetter);
+  const childAdder = new ChildAdder(serverUrl);
+  const addChildUsecase = new AddChild(tokensGetter, childAdder);
   const app: IApp = new WebReact(
     conf.REFRESH_MS,
     conf.CHECK_AUTH_INTERVAL_MS,
     authenticateUsecase,
     refreshTokensUsecase,
     checkIfAuthenticatedUsecase,
+    getUserUsecase,
+    addChildUsecase,
   );
   app.run();
 };

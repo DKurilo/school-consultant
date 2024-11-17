@@ -1,10 +1,22 @@
-body{
-  background-color: #050505;
-  color: #5588aa;
-  font-family: serif;
+html {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
 }
 
-button{
-  background-color: #113377;
-  color: #88aadd;
+body {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }

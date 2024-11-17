@@ -15,7 +15,7 @@ const main = async () => {
     email,
     passHash: hash,
     passSalt: salt,
-    children: [],
+    children: {},
     attemptsLeft,
   };
   writeFile(filePath, JSON.stringify(user, null, '  '));

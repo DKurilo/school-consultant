@@ -1,4 +1,4 @@
-import { Token } from "@school-consultant/common/src/domains/token";
+import { Token } from "@school-consultant/common";
 
 export interface ITokenChecker {
   verify: (token: string) => Promise<Token>;

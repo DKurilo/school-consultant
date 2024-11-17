@@ -6,7 +6,7 @@ export const UserParser = z.object({
   passHash: z.string(),
   passSalt: z.string(),
   refreshToken: z.string().optional(),
-  children: z.array(ChildParser),
+  children: z.record(z.string(), ChildParser),
   attemptsLeft: z.number(),
 });
 

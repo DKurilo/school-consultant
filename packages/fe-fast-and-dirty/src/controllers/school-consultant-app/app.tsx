@@ -1,14 +1,27 @@
 import * as React from "react";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 import "./styles/index.css";
 import { IAuthenticate } from "../../ports/authenticate";
 import { Login } from "./components/login";
 import { ICheckIfAuthenticated } from "../../ports/check-if-authenticated";
+import { Page } from "./components/page";
+import { IGetUser } from "../../ports/get-user";
+import {IAddChild} from "../../ports/add-child";
 
 export type SchoolConsultantParams = {
   checkAuthInterval: number;
   auth: IAuthenticate;
   checkAuth: ICheckIfAuthenticated;
+  getUser: IGetUser;
+  addChild: IAddChild;
 };
+
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+  },
+});
 
 export const SchoolConsultant = (params: SchoolConsultantParams) => {
   const [authenticated, setAuthenticated] = React.useState(false);
@@ -32,5 +45,11 @@ export const SchoolConsultant = (params: SchoolConsultantParams) => {
     },
     [authenticated, setAuthenticated, params.auth],
   );
-  return <Login show={!authenticated} onSubmit={authenticateHandler}></Login>;
+  return (
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <Login show={!authenticated} onSubmit={authenticateHandler}></Login>
+      {authenticated && <Page getUser={params.getUser} addChild={params.addChild}></Page>}
+    </ThemeProvider>
+  );
 };

@@ -1,4 +1,4 @@
-import { User } from "@school-consultant/common/src/domains/user";
+import { User } from "@school-consultant/common";
 
 export interface IUserPreserver {
   preserveUser: (user: User) => Promise<void>;

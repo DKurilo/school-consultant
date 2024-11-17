@@ -15,6 +15,10 @@ import { RefreshToken } from "./usecases/refreshToken";
 import { ITokenChecker } from "./ports/token-checker";
 import { JwtTokenChecker } from "./gateways/jwt-token-checker";
 import { z } from "zod";
+import { IGetUser } from "./ports/get-user";
+import { GetUserInfo } from "./usecases/get-user-info";
+import { IAddChild } from "./ports/add-child";
+import { AddChild } from "./usecases/add-child";
 
 const ConfigParser = z.object({
   CORS_ORIGIN: z.string(),
@@ -55,12 +59,25 @@ const main = () => {
     tokenGenerator,
     tokenChecker,
   );
+  const getUserInfoUsecase: IGetUser = new GetUserInfo(
+    logger,
+    tokenChecker,
+    userGetter,
+  );
+  const addChildUsecase: IAddChild = new AddChild(
+    logger,
+    tokenChecker,
+    userGetter,
+    userPreserver,
+  );
   const app: IApp = new FastifyWebServer(
     logger,
     conf.HTTP_PORT,
     conf.CORS_ORIGIN,
     loginUsecase,
     refreshTokenUsecase,
+    getUserInfoUsecase,
+    addChildUsecase,
   );
   app.run();
 };

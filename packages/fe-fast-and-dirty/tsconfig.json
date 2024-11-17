@@ -10,7 +10,6 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "downlevelIteration": true,
-    "rootDir": "."
+    "downlevelIteration": true
   }
 }

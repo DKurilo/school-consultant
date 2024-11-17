@@ -1,5 +1,9 @@
 import * as React from "react";
 import { z } from "zod";
+import Button from "@mui/material/Button";
+import FormControl from "@mui/material/FormControl";
+import TextField from "@mui/material/TextField";
+import "./styles/login.css";
 
 const ValueParser = z.object({ value: z.string() });
 
@@ -27,13 +31,35 @@ export const Login = (params: LoginParams) => {
 
   return (
     params.show && (
-      <form onSubmit={handleLogin} ref={ref}>
-        <input name="email" type="email" />
-        <br />
-        <input name="password" type="password" />
-        <br />
-        <button type="submit">login</button>
-      </form>
+      <div className="login-container">
+        <div className="form">
+          <form onSubmit={handleLogin} ref={ref}>
+            <FormControl>
+              <TextField
+                name="email"
+                type="email"
+                placeholder="email"
+                margin="none"
+                variant="filled"
+                hiddenLabel
+                size="small"
+              />
+              <TextField
+                name="password"
+                type="password"
+                placeholder="password"
+                margin="normal"
+                variant="filled"
+                hiddenLabel
+                size="small"
+              />
+              <Button variant="contained" type="submit" size="small">
+                login
+              </Button>
+            </FormControl>
+          </form>
+        </div>
+      </div>
     )
   );
 };

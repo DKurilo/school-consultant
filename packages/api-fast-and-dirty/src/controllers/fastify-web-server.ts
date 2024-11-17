@@ -1,4 +1,4 @@
-import { fastify, FastifyInstance } from "fastify";
+import { fastify, FastifyInstance, FastifyReply } from "fastify";
 import cors from "@fastify/cors";
 import { IApp } from "../ports/app";
 import { ILogger } from "../ports/logger";
@@ -11,6 +11,8 @@ import {
 import { ILogin } from "../ports/login";
 import { z } from "zod";
 import { IRefreshToken } from "../ports/refresh-token";
+import { IGetUser } from "../ports/get-user";
+import { IAddChild } from "../ports/add-child";
 
 const LoginParser = z.object({
   email: z.string(),
@@ -19,6 +21,10 @@ const LoginParser = z.object({
 
 const RefreshTokenParser = z.object({
   refreshToken: z.string(),
+});
+
+const ChildNameParser = z.object({
+  name: z.string(),
 });
 
 export class FastifyWebServer implements IApp {
@@ -33,6 +39,8 @@ export class FastifyWebServer implements IApp {
   private logger: ILogger;
   private loginUsecase: ILogin;
   private refreshTokenUsecase: IRefreshToken;
+  private getUserInfoUsecase: IGetUser;
+  private addChildUsecase: IAddChild;
 
   public constructor(
     logger: ILogger,
@@ -40,12 +48,16 @@ export class FastifyWebServer implements IApp {
     origin: string,
     loginUsecase: ILogin,
     refreshTokenUsecase: IRefreshToken,
+    getUserInfoUsecase: IGetUser,
+    addChildUsecase: IAddChild,
   ) {
     this.logger = logger;
     this.port = port;
     this.origin = origin;
     this.loginUsecase = loginUsecase;
     this.refreshTokenUsecase = refreshTokenUsecase;
+    this.getUserInfoUsecase = getUserInfoUsecase;
+    this.addChildUsecase = addChildUsecase;
     this.server = fastify({ loggerInstance: this.logger });
     this.server.register(cors, { origin: this.origin });
 
@@ -104,6 +116,67 @@ export class FastifyWebServer implements IApp {
         reply.send("something is wrong");
       }
     });
+
+    this.server.get("/user", async (request, reply) => {
+      try {
+        const token = this.getJwt(request.headers);
+        if (token === undefined) {
+          reply.status(403);
+          reply.send("no token");
+          return;
+        }
+        const response = await this.getUserInfoUsecase.execute(token);
+        if (response === "not found") {
+          reply.status(404);
+          reply.send("user not found");
+        }
+        if (response === "no access") {
+          reply.status(403);
+          reply.send("no access");
+        }
+        reply.status(200);
+        reply.send(response);
+      } catch (e) {
+        this.response500(e, reply);
+      }
+    });
+
+    this.server.post("/child", async (request, reply) => {
+      try {
+        const body = ChildNameParser.parse(request.body);
+        const token = this.getJwt(request.headers);
+        if (token === undefined) {
+          reply.status(403);
+          reply.send("no token");
+          return;
+        }
+        const result = await this.addChildUsecase.execute(token, body.name);
+        if (result === "no access") {
+          reply.status(403);
+          reply.send("no access");
+        }
+        if (result === "user not found") {
+          reply.status(404);
+          reply.send("user not found");
+        }
+        if (result === "child already exists") {
+          reply.status(400);
+          reply.send("child already exists");
+        }
+        reply.statusCode = 201;
+        reply.send();
+      } catch (e) {
+        this.logger.error(`error ${e}`);
+        reply.statusCode = 500;
+        reply.send("something is wrong");
+      }
+    });
+  }
+
+  private response500(e: unknown, reply: FastifyReply) {
+    this.logger.error(`error ${e}`);
+    reply.statusCode = 500;
+    reply.send("something is wrong");
   }
 
   private getJwt(headers: IncomingHttpHeaders): string | undefined {
