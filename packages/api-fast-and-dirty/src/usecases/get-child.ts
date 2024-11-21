@@ -1,26 +1,24 @@
 import { IUserGetter } from "../ports/user-getter";
 import { ILogger } from "../ports/logger";
 import { ITokenChecker } from "../ports/token-checker";
-import { Token } from "@school-consultant/common";
-import { IAddChild } from "../ports/add-child";
-import { IUserPreserver } from "../ports/user-preserver";
+import { Token } from "@school-consultant/common/src/domains/token";
+import { ChildResponse } from "@school-consultant/common";
+import { childToChildResponse } from "@school-consultant/common/src/domains/child-response";
+import { IGetChild } from "../ports/get-child";
 
-export class AddChild implements IAddChild {
+export class GetChild implements IGetChild {
   private logger: ILogger;
   private tokenChecker: ITokenChecker;
   private userGetter: IUserGetter;
-  private userPreservr: IUserPreserver;
 
   public constructor(
     logger: ILogger,
     tokenChecker: ITokenChecker,
     userGetter: IUserGetter,
-    userPreservr: IUserPreserver,
   ) {
     this.logger = logger;
     this.tokenChecker = tokenChecker;
     this.userGetter = userGetter;
-    this.userPreservr = userPreservr;
   }
 
   private async getTokenContent(token: string): Promise<Token | undefined> {
@@ -37,8 +35,8 @@ export class AddChild implements IAddChild {
 
   public async execute(
     token: string,
-    name: string,
-  ): Promise<void | "no access" | "user not found" | "child already exists"> {
+    child: string,
+  ): Promise<ChildResponse | "not found" | "no access"> {
     const tokenContent = await this.getTokenContent(token);
 
     if (tokenContent === undefined) {
@@ -46,13 +44,9 @@ export class AddChild implements IAddChild {
     }
 
     const user = await this.userGetter.getUser(tokenContent.email);
-    if (user === undefined) {
-      return "user not found";
+    if (user === undefined || !(child in user.children)) {
+      return "not found";
     }
-    if (name in user.children) {
-      return "child already exists";
-    }
-    user.children[name] = { name, recommendations: {} };
-    await this.userPreservr.preserveUser(user);
+    return childToChildResponse(user.children[child]);
   }
 }

@@ -3,7 +3,7 @@ import { RecommendationParser } from "./recommendation";
 
 export const ChildParser = z.object({
   name: z.string(),
-  recommendations: z.array(RecommendationParser),
+  recommendations: z.record(z.string(), RecommendationParser),
 });
 
 export type Child = z.infer<typeof ChildParser>;

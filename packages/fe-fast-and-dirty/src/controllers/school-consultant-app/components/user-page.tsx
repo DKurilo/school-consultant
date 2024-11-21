@@ -2,8 +2,9 @@ import * as React from "react";
 import { IGetUser } from "../../../ports/get-user";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import {z} from "zod";
-import {IAddChild} from "../../../ports/add-child";
+import { z } from "zod";
+import { IAddChild } from "../../../ports/add-child";
+import "./styles/user-page.css";
 
 const FormDataParser = z.object({
   target: z.object({
@@ -19,14 +20,14 @@ export type UserPageParams = {
 };
 
 export const UserPage = (params: UserPageParams) => {
-  const [children, setChildren] = React.useState([]);
+  const [children, setChildren] = React.useState<Record<string, number>>({});
   const [attempts, setAttempts] = React.useState(0);
   const [newChildName, setNewChildName] = React.useState("");
   const ref = React.useRef();
 
   const loadUser = async () => {
     const user = await params.getUser.execute();
-    setChildren(user.children ?? []);
+    setChildren(user.children ?? {});
     setAttempts(user.attemptsLeft ?? 0);
   };
 
@@ -41,7 +42,7 @@ export const UserPage = (params: UserPageParams) => {
     try {
       await params.addChild.execute(name);
       setNewChildName("");
-    } catch(e) {
+    } catch (e) {
       console.log(e);
       alert("child with this name exists");
     }
@@ -50,16 +51,20 @@ export const UserPage = (params: UserPageParams) => {
 
   const handleNewChildNameChange = (e: React.SyntheticEvent) => {
     setNewChildName(e.target?.["value"] ?? "");
-  }
+  };
 
   return (
-    <>
+    <div className="user-page">
       <div>Click on child to see info.</div>
-      <div>You have {attempts} attempts left.</div>
+      <div>
+        <small>You have {attempts} new recommendations left.</small>
+      </div>
       <h1>Children</h1>
       <ul>
-        {children.map((child) => (
-          <li onClick={() => params.childCallback(child)} key={child}>{child}</li>
+        {Object.entries(children).map(([child, n]) => (
+          <li onClick={() => params.childCallback(child)} key={child}>
+            {child} - {n} recommendations
+          </li>
         ))}
       </ul>
       <form ref={ref} onSubmit={handleAddChild}>
@@ -74,8 +79,10 @@ export const UserPage = (params: UserPageParams) => {
           value={newChildName}
           onChange={handleNewChildNameChange}
         ></TextField>
-        <Button variant="contained" type="submit">add child</Button>
+        <Button variant="contained" type="submit">
+          add child
+        </Button>
       </form>
-    </>
+    </div>
   );
 };

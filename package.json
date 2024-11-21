@@ -6,7 +6,8 @@
   "scripts": {
     "test": "npm run test --workspaces --if-present",
     "build": "npm run build --workspaces --if-present",
-    "start": "npm run start --workspaces --if-present",
+    "start:fe": "npm run start -w @school-consultant/fe-fast-and-dirty",
+    "start:api": "npm run start -w @school-consultant/api-fast-and-dirty",
     "lint": "npm run lint --workspaces --if-present"
   },
   "repository": {

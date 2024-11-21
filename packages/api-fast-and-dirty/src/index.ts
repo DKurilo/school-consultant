@@ -19,6 +19,10 @@ import { IGetUser } from "./ports/get-user";
 import { GetUserInfo } from "./usecases/get-user-info";
 import { IAddChild } from "./ports/add-child";
 import { AddChild } from "./usecases/add-child";
+import { IGetChild } from "./ports/get-child";
+import { GetChild } from "./usecases/get-child";
+import { ISaveRecommendation } from "./ports/save-recommendation";
+import { SaveRecommendation } from "./usecases/save-recommendation";
 
 const ConfigParser = z.object({
   CORS_ORIGIN: z.string(),
@@ -70,6 +74,17 @@ const main = () => {
     userGetter,
     userPreserver,
   );
+  const getChildUsecase: IGetChild = new GetChild(
+    logger,
+    tokenChecker,
+    userGetter,
+  );
+  const saveRecommendationUsecase: ISaveRecommendation = new SaveRecommendation(
+    logger,
+    tokenChecker,
+    userGetter,
+    userPreserver,
+  );
   const app: IApp = new FastifyWebServer(
     logger,
     conf.HTTP_PORT,
@@ -78,6 +93,8 @@ const main = () => {
     refreshTokenUsecase,
     getUserInfoUsecase,
     addChildUsecase,
+    getChildUsecase,
+    saveRecommendationUsecase,
   );
   app.run();
 };

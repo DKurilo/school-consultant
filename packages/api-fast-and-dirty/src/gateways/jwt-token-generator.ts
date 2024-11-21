@@ -72,7 +72,7 @@ export class JwtTokenGenerator implements ITokenGenerator {
 
   public async generateRefreshToken(): Promise<string> {
     const abc =
-      "abcdefghijclmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}[]|\\;:'\"<>,.?/`~";
+      "abcdefghijclmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+{}[]|\\;:'\"<>,.?/`~";
     const tokenArray = await Promise.all(
       new Array(256).fill(0).map(() => asyncRandomInt(0, abc.length - 1)),
     );

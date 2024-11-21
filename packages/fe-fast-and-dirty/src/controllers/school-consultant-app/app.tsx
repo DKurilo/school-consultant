@@ -7,7 +7,9 @@ import { Login } from "./components/login";
 import { ICheckIfAuthenticated } from "../../ports/check-if-authenticated";
 import { Page } from "./components/page";
 import { IGetUser } from "../../ports/get-user";
-import {IAddChild} from "../../ports/add-child";
+import { IAddChild } from "../../ports/add-child";
+import { IGetChild } from "../../ports/get-child";
+import { ISaveRecommendation } from "../../ports/save-recommendation";
 
 export type SchoolConsultantParams = {
   checkAuthInterval: number;
@@ -15,6 +17,8 @@ export type SchoolConsultantParams = {
   checkAuth: ICheckIfAuthenticated;
   getUser: IGetUser;
   addChild: IAddChild;
+  getChild: IGetChild;
+  saveRecommendation: ISaveRecommendation;
 };
 
 const darkTheme = createTheme({
@@ -49,7 +53,14 @@ export const SchoolConsultant = (params: SchoolConsultantParams) => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <Login show={!authenticated} onSubmit={authenticateHandler}></Login>
-      {authenticated && <Page getUser={params.getUser} addChild={params.addChild}></Page>}
+      {authenticated && (
+        <Page
+          getUser={params.getUser}
+          addChild={params.addChild}
+          getChild={params.getChild}
+          saveRecommendation={params.saveRecommendation}
+        ></Page>
+      )}
     </ThemeProvider>
   );
 };

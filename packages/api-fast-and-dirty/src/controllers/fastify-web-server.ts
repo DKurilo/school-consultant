@@ -13,6 +13,9 @@ import { z } from "zod";
 import { IRefreshToken } from "../ports/refresh-token";
 import { IGetUser } from "../ports/get-user";
 import { IAddChild } from "../ports/add-child";
+import { IGetChild } from "../ports/get-child";
+import { ISaveRecommendation } from "../ports/save-recommendation";
+import { RecommendationInputParser } from "@school-consultant/common";
 
 const LoginParser = z.object({
   email: z.string(),
@@ -25,6 +28,13 @@ const RefreshTokenParser = z.object({
 
 const ChildNameParser = z.object({
   name: z.string(),
+});
+
+type ChildName = z.infer<typeof ChildNameParser>;
+
+const RecommendationAndChildParser = z.object({
+  child: z.string(),
+  recommendation: RecommendationInputParser,
 });
 
 export class FastifyWebServer implements IApp {
@@ -41,6 +51,8 @@ export class FastifyWebServer implements IApp {
   private refreshTokenUsecase: IRefreshToken;
   private getUserInfoUsecase: IGetUser;
   private addChildUsecase: IAddChild;
+  private getChildUsecase: IGetChild;
+  private saveRecommendationUsecase: ISaveRecommendation;
 
   public constructor(
     logger: ILogger,
@@ -50,6 +62,8 @@ export class FastifyWebServer implements IApp {
     refreshTokenUsecase: IRefreshToken,
     getUserInfoUsecase: IGetUser,
     addChildUsecase: IAddChild,
+    getChildUsecase: IGetChild,
+    saveRecommendationUsecase: ISaveRecommendation,
   ) {
     this.logger = logger;
     this.port = port;
@@ -58,6 +72,8 @@ export class FastifyWebServer implements IApp {
     this.refreshTokenUsecase = refreshTokenUsecase;
     this.getUserInfoUsecase = getUserInfoUsecase;
     this.addChildUsecase = addChildUsecase;
+    this.getChildUsecase = getChildUsecase;
+    this.saveRecommendationUsecase = saveRecommendationUsecase;
     this.server = fastify({ loggerInstance: this.logger });
     this.server.register(cors, { origin: this.origin });
 
@@ -162,6 +178,69 @@ export class FastifyWebServer implements IApp {
         if (result === "child already exists") {
           reply.status(400);
           reply.send("child already exists");
+        }
+        reply.statusCode = 201;
+        reply.send();
+      } catch (e) {
+        this.logger.error(`error ${e}`);
+        reply.statusCode = 500;
+        reply.send("something is wrong");
+      }
+    });
+
+    this.server.get<{ Querystring: ChildName }>(
+      "/child",
+      async (request, reply) => {
+        try {
+          const token = this.getJwt(request.headers);
+          if (token === undefined) {
+            reply.status(403);
+            reply.send("no token");
+            return;
+          }
+          const child = request.query.name;
+          const response = await this.getChildUsecase.execute(token, child);
+          if (response === "not found") {
+            reply.status(404);
+            reply.send("user not found");
+          }
+          if (response === "no access") {
+            reply.status(403);
+            reply.send("no access");
+          }
+          reply.status(200);
+          reply.send(response);
+        } catch (e) {
+          this.response500(e, reply);
+        }
+      },
+    );
+
+    this.server.post("/recommendation", async (request, reply) => {
+      try {
+        const body = RecommendationAndChildParser.parse(request.body);
+        const token = this.getJwt(request.headers);
+        if (token === undefined) {
+          reply.status(403);
+          reply.send("no token");
+          return;
+        }
+        const result = await this.saveRecommendationUsecase.execute(
+          token,
+          body.child,
+          body.recommendation,
+        );
+        if (result === "no access") {
+          reply.status(403);
+          reply.send("no access");
+        }
+        if (result === "user not found") {
+          reply.status(404);
+          reply.send("user not found");
+        }
+        if (result === "child not found") {
+          reply.status(404);
+          reply.send("child not found");
         }
         reply.statusCode = 201;
         reply.send();

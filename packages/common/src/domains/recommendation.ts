@@ -13,3 +13,12 @@ export const RecommendationParser = z.object({
 });
 
 export type Recommendation = z.infer<typeof RecommendationParser>;
+
+export const RecommendationInputParser = z.object({
+  title: z.string(),
+  interests: z.array(z.string()),
+  additionalInfo: z.string(),
+  address: AddressParser,
+});
+
+export type RecommendationInput = z.infer<typeof RecommendationInputParser>;
