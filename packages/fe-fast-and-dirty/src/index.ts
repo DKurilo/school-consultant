@@ -28,7 +28,9 @@ import { ChildGetter } from "./gateways/child-getter";
 import { IGetChild } from "./ports/get-child";
 import { GetChild } from "./usecases/get-child";
 import { ISaveRecommendation } from "./ports/save-recommendation";
-import { RecommendationInput } from "@school-consultant/common";
+import { IRecommendationPreserver } from "./ports/recommendation-preserver";
+import { RecommendationPreserver } from "./gateways/recommendation-preserver";
+import { SaveRecommendation } from "./usecases/save-recommendation";
 
 declare let WEBPACK_CONFIG: unknown;
 
@@ -66,11 +68,12 @@ const main = () => {
   const addChildUsecase: IAddChild = new AddChild(tokensGetter, childAdder);
   const childGetter: IChildGetter = new ChildGetter(serverUrl);
   const getChildUsecase: IGetChild = new GetChild(tokensGetter, childGetter);
-  const saveRecommendation: ISaveRecommendation = {
-    execute: async (child: string, recommendation: RecommendationInput) => {
-      console.log(child, recommendation);
-    },
-  };
+  const recommendationPreserver: IRecommendationPreserver =
+    new RecommendationPreserver(serverUrl);
+  const saveRecommendation: ISaveRecommendation = new SaveRecommendation(
+    tokensGetter,
+    recommendationPreserver,
+  );
   const app: IApp = new WebReact(
     conf.REFRESH_MS,
     conf.CHECK_AUTH_INTERVAL_MS,

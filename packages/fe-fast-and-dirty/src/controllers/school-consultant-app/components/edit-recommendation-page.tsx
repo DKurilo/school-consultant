@@ -44,11 +44,16 @@ export const EditRecommendationPage = (
   const ref = React.useRef();
   const [interests, setInterests] = React.useState([]);
 
+  React.useEffect(() => {
+    if (params.recommendation === undefined) {
+      return;
+    }
+  }, [])
+
   const handleSaveRecommendation = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    console.log("save recommendation", interests);
     const data = FormDataParser.parse(e);
-    const recommendation: RecommendationInput = {
+    const recommendationInput: RecommendationInput = {
       title: data.target.title.value,
       interests,
       additionalInfo: data.target.additionalInfo.value,
@@ -60,7 +65,7 @@ export const EditRecommendationPage = (
       },
     };
     try {
-      await params.saveRecommendation.execute(params.child, recommendation);
+      await params.saveRecommendation.execute(params.child, recommendationInput);
     } catch (exc) {
       console.log(e, exc);
       alert("something is wrong");
