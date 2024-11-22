@@ -7,7 +7,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/system/Stack";
 import Button from "@mui/material/Button";
-import {IGetRecommendation} from "../../../ports/get-recommendation";
+import { IGetRecommendation } from "../../../ports/get-recommendation";
 
 const ValueParser = z.object({ value: z.string() });
 
@@ -32,9 +32,11 @@ const commonInterests = [
   "Art",
 ];
 
-const changeInputHandlerFactory = (setter: (val: string) => void) => (event: React.ChangeEvent<HTMLInputElement>) => {
-  setter(event.target.value);
-};
+const changeInputHandlerFactory =
+  (setter: (val: string) => void) =>
+  (event: React.ChangeEvent<HTMLInputElement>) => {
+    setter(event.target.value);
+  };
 
 export type EditRecommendationPageParams = {
   child: string;
@@ -50,7 +52,9 @@ export const EditRecommendationPage = (
   const ref = React.useRef();
   const [title, setTitle] = React.useState<string | undefined>(undefined);
   const [interests, setInterests] = React.useState([]);
-  const [additionalInfo, setAdditionalInfo] = React.useState<string | undefined>(undefined);
+  const [additionalInfo, setAdditionalInfo] = React.useState<
+    string | undefined
+  >(undefined);
   const [zip, setZip] = React.useState<string | undefined>(undefined);
   const [street, setStreet] = React.useState<string | undefined>(undefined);
   const [city, setCity] = React.useState<string | undefined>(undefined);
@@ -61,7 +65,10 @@ export const EditRecommendationPage = (
       return;
     }
     const doer = async () => {
-      const recommendation = await params.getRecommendation.execute(params.child, params.recommendation);
+      const recommendation = await params.getRecommendation.execute(
+        params.child,
+        params.recommendation,
+      );
       setTitle(recommendation.title);
       setInterests(recommendation.interests);
       setAdditionalInfo(recommendation.additionalInfo);
@@ -69,10 +76,10 @@ export const EditRecommendationPage = (
       setStreet(recommendation.address.street);
       setCity(recommendation.address.city);
       setState(recommendation.address.state);
-    }
+    };
 
     doer();
-  }, [])
+  }, []);
 
   const handleSaveRecommendation = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -89,19 +96,40 @@ export const EditRecommendationPage = (
       },
     };
     try {
-      await params.saveRecommendation.execute(params.child, recommendationInput);
+      await params.saveRecommendation.execute(
+        params.child,
+        recommendationInput,
+      );
     } catch (exc) {
       console.log(e, exc);
       alert("something is wrong");
     }
   };
 
-  const changeTitleHandler = React.useMemo(() => changeInputHandlerFactory(setTitle), [setTitle]);
-  const changeAdditionalInfoHandler = React.useMemo(() => changeInputHandlerFactory(setAdditionalInfo), [setAdditionalInfo]);
-  const changeZipHandler = React.useMemo(() => changeInputHandlerFactory(setZip), [setZip]);
-  const changeStreetHandler = React.useMemo(() => changeInputHandlerFactory(setStreet), [setStreet]);
-  const changeCityHandler = React.useMemo(() => changeInputHandlerFactory(setCity), [setCity]);
-  const changeStateHandler = React.useMemo(() => changeInputHandlerFactory(setState), [setState]);
+  const changeTitleHandler = React.useMemo(
+    () => changeInputHandlerFactory(setTitle),
+    [setTitle],
+  );
+  const changeAdditionalInfoHandler = React.useMemo(
+    () => changeInputHandlerFactory(setAdditionalInfo),
+    [setAdditionalInfo],
+  );
+  const changeZipHandler = React.useMemo(
+    () => changeInputHandlerFactory(setZip),
+    [setZip],
+  );
+  const changeStreetHandler = React.useMemo(
+    () => changeInputHandlerFactory(setStreet),
+    [setStreet],
+  );
+  const changeCityHandler = React.useMemo(
+    () => changeInputHandlerFactory(setCity),
+    [setCity],
+  );
+  const changeStateHandler = React.useMemo(
+    () => changeInputHandlerFactory(setState),
+    [setState],
+  );
 
   return (
     <div className="editrecommendation-page">

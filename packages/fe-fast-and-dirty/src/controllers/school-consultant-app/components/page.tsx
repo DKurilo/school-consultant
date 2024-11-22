@@ -6,7 +6,7 @@ import { IGetChild } from "../../../ports/get-child";
 import { ChildPage } from "./child-page";
 import { ISaveRecommendation } from "../../../ports/save-recommendation";
 import { EditRecommendationPage } from "./edit-recommendation-page";
-import {IGetRecommendation} from "../../../ports/get-recommendation";
+import { IGetRecommendation } from "../../../ports/get-recommendation";
 
 export type PageParams = {
   getUser: IGetUser;

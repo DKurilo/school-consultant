@@ -16,7 +16,7 @@ import { IAddChild } from "../ports/add-child";
 import { IGetChild } from "../ports/get-child";
 import { ISaveRecommendation } from "../ports/save-recommendation";
 import { RecommendationInputParser } from "@school-consultant/common";
-import {IGetRecommendation} from "../ports/get-gecommendation";
+import { IGetRecommendation } from "../ports/get-gecommendation";
 
 const LoginParser = z.object({
   email: z.string(),
@@ -41,7 +41,7 @@ const RecommendationAndChildParser = z.object({
 type RecommendationRequest = {
   "child-name": string;
   "recommendation-title": string;
-}
+};
 
 export class FastifyWebServer implements IApp {
   private server: FastifyInstance<
@@ -272,7 +272,11 @@ export class FastifyWebServer implements IApp {
           }
           const child = request.query["child-name"];
           const recommendation = request.query["recommendation-title"];
-          const response = await this.getRecommendationUsecase.execute(token, child, recommendation);
+          const response = await this.getRecommendationUsecase.execute(
+            token,
+            child,
+            recommendation,
+          );
           if (response === "not found") {
             reply.status(404);
             reply.send("user/child or recommendation not found");

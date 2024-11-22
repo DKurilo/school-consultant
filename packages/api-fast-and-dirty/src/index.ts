@@ -23,8 +23,8 @@ import { IGetChild } from "./ports/get-child";
 import { GetChild } from "./usecases/get-child";
 import { ISaveRecommendation } from "./ports/save-recommendation";
 import { SaveRecommendation } from "./usecases/save-recommendation";
-import {IGetRecommendation} from "./ports/get-gecommendation";
-import {GetRecommendation} from "./usecases/get-recommendation";
+import { IGetRecommendation } from "./ports/get-gecommendation";
+import { GetRecommendation } from "./usecases/get-recommendation";
 
 const ConfigParser = z.object({
   CORS_ORIGIN: z.string(),
@@ -87,7 +87,11 @@ const main = () => {
     userGetter,
     userPreserver,
   );
-  const getRecommendationUsecase: IGetRecommendation = new GetRecommendation(logger, tokenChecker, userGetter);
+  const getRecommendationUsecase: IGetRecommendation = new GetRecommendation(
+    logger,
+    tokenChecker,
+    userGetter,
+  );
   const app: IApp = new FastifyWebServer(
     logger,
     conf.HTTP_PORT,

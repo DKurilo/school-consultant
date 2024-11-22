@@ -2,9 +2,8 @@ import { IUserGetter } from "../ports/user-getter";
 import { ILogger } from "../ports/logger";
 import { ITokenChecker } from "../ports/token-checker";
 import { Token } from "@school-consultant/common/src/domains/token";
-import { ChildResponse, Recommendation } from "@school-consultant/common";
-import { childToChildResponse } from "@school-consultant/common/src/domains/child-response";
-import {IGetRecommendation} from "../ports/get-gecommendation";
+import { Recommendation } from "@school-consultant/common";
+import { IGetRecommendation } from "../ports/get-gecommendation";
 
 export class GetRecommendation implements IGetRecommendation {
   private logger: ILogger;
@@ -45,10 +44,13 @@ export class GetRecommendation implements IGetRecommendation {
     }
 
     const user = await this.userGetter.getUser(tokenContent.email);
-    if (user === undefined || !(child in user.children) || !(recommendation in user.children[child].recommendations)) {
+    if (
+      user === undefined ||
+      !(child in user.children) ||
+      !(recommendation in user.children[child].recommendations)
+    ) {
       return "not found";
     }
     return user.children[child].recommendations[recommendation];
   }
 }
-

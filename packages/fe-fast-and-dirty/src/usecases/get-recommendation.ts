@@ -7,17 +7,26 @@ export class GetRecommendation implements IGetRecommendation {
   private tokensGetter: ITokensGetter;
   private recommendationGetter: IRecommendationGetter;
 
-  public constructor(tokenGetter: ITokensGetter, recommendationGetter: IRecommendationGetter) {
+  public constructor(
+    tokenGetter: ITokensGetter,
+    recommendationGetter: IRecommendationGetter,
+  ) {
     this.tokensGetter = tokenGetter;
     this.recommendationGetter = recommendationGetter;
   }
 
-  public async execute(childName: string, recommendationTitle: string): Promise<Recommendation> {
+  public async execute(
+    childName: string,
+    recommendationTitle: string,
+  ): Promise<Recommendation> {
     const token = await this.tokensGetter.getToken();
     if (token === undefined) {
       throw Error("no token");
     }
-    return this.recommendationGetter.getRecommendation(token, childName, recommendationTitle);
+    return this.recommendationGetter.getRecommendation(
+      token,
+      childName,
+      recommendationTitle,
+    );
   }
 }
-

@@ -1,4 +1,7 @@
-import { Recommendation, RecommendationParser } from "@school-consultant/common";
+import {
+  Recommendation,
+  RecommendationParser,
+} from "@school-consultant/common";
 import axios from "axios";
 import { IRecommendationGetter } from "../ports/recommendation-getter";
 
@@ -27,4 +30,3 @@ export class RecommendationGetter implements IRecommendationGetter {
     return recommendation;
   }
 }
-

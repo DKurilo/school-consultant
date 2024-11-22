@@ -10,7 +10,7 @@ import { IGetUser } from "../../ports/get-user";
 import { IAddChild } from "../../ports/add-child";
 import { IGetChild } from "../../ports/get-child";
 import { ISaveRecommendation } from "../../ports/save-recommendation";
-import {IGetRecommendation} from "../../ports/get-recommendation";
+import { IGetRecommendation } from "../../ports/get-recommendation";
 
 export type SchoolConsultantParams = {
   checkAuthInterval: number;

@@ -3,7 +3,7 @@ import { IApp } from "../ports/app";
 import { IAuthenticate } from "../ports/authenticate";
 import { ICheckIfAuthenticated } from "../ports/check-if-authenticated";
 import { IGetChild } from "../ports/get-child";
-import {IGetRecommendation} from "../ports/get-recommendation";
+import { IGetRecommendation } from "../ports/get-recommendation";
 import { IGetUser } from "../ports/get-user";
 import { IRefreshTokens } from "../ports/refresh-tokens";
 import { ISaveRecommendation } from "../ports/save-recommendation";
