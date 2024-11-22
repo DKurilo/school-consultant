@@ -6,12 +6,14 @@ import { IGetChild } from "../../../ports/get-child";
 import { ChildPage } from "./child-page";
 import { ISaveRecommendation } from "../../../ports/save-recommendation";
 import { EditRecommendationPage } from "./edit-recommendation-page";
+import {IGetRecommendation} from "../../../ports/get-recommendation";
 
 export type PageParams = {
   getUser: IGetUser;
   addChild: IAddChild;
   getChild: IGetChild;
   saveRecommendation: ISaveRecommendation;
+  getRecommendation: IGetRecommendation;
 };
 
 export const Page = (params: PageParams) => {
@@ -65,6 +67,7 @@ export const Page = (params: PageParams) => {
           child={currentPage[1]}
           recommendation={currentPage[2]}
           backCallback={() => userPageChildCallback(currentPage[1])}
+          getRecommendation={params.getRecommendation}
           saveRecommendation={params.saveRecommendation}
         />
       );

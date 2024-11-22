@@ -16,6 +16,7 @@ import { IAddChild } from "../ports/add-child";
 import { IGetChild } from "../ports/get-child";
 import { ISaveRecommendation } from "../ports/save-recommendation";
 import { RecommendationInputParser } from "@school-consultant/common";
+import {IGetRecommendation} from "../ports/get-gecommendation";
 
 const LoginParser = z.object({
   email: z.string(),
@@ -26,16 +27,21 @@ const RefreshTokenParser = z.object({
   refreshToken: z.string(),
 });
 
-const ChildNameParser = z.object({
+const ChildRequestParser = z.object({
   name: z.string(),
 });
 
-type ChildName = z.infer<typeof ChildNameParser>;
+type ChildRequest = z.infer<typeof ChildRequestParser>;
 
 const RecommendationAndChildParser = z.object({
   child: z.string(),
   recommendation: RecommendationInputParser,
 });
+
+type RecommendationRequest = {
+  "child-name": string;
+  "recommendation-title": string;
+}
 
 export class FastifyWebServer implements IApp {
   private server: FastifyInstance<
@@ -53,6 +59,7 @@ export class FastifyWebServer implements IApp {
   private addChildUsecase: IAddChild;
   private getChildUsecase: IGetChild;
   private saveRecommendationUsecase: ISaveRecommendation;
+  private getRecommendationUsecase: IGetRecommendation;
 
   public constructor(
     logger: ILogger,
@@ -64,6 +71,7 @@ export class FastifyWebServer implements IApp {
     addChildUsecase: IAddChild,
     getChildUsecase: IGetChild,
     saveRecommendationUsecase: ISaveRecommendation,
+    getRecommendationUsecase: IGetRecommendation,
   ) {
     this.logger = logger;
     this.port = port;
@@ -74,6 +82,7 @@ export class FastifyWebServer implements IApp {
     this.addChildUsecase = addChildUsecase;
     this.getChildUsecase = getChildUsecase;
     this.saveRecommendationUsecase = saveRecommendationUsecase;
+    this.getRecommendationUsecase = getRecommendationUsecase;
     this.server = fastify({ loggerInstance: this.logger });
     this.server.register(cors, { origin: this.origin });
 
@@ -159,7 +168,7 @@ export class FastifyWebServer implements IApp {
 
     this.server.post("/child", async (request, reply) => {
       try {
-        const body = ChildNameParser.parse(request.body);
+        const body = ChildRequestParser.parse(request.body);
         const token = this.getJwt(request.headers);
         if (token === undefined) {
           reply.status(403);
@@ -188,7 +197,7 @@ export class FastifyWebServer implements IApp {
       }
     });
 
-    this.server.get<{ Querystring: ChildName }>(
+    this.server.get<{ Querystring: ChildRequest }>(
       "/child",
       async (request, reply) => {
         try {
@@ -250,6 +259,35 @@ export class FastifyWebServer implements IApp {
         reply.send("something is wrong");
       }
     });
+
+    this.server.get<{ Querystring: RecommendationRequest }>(
+      "/recommendation",
+      async (request, reply) => {
+        try {
+          const token = this.getJwt(request.headers);
+          if (token === undefined) {
+            reply.status(403);
+            reply.send("no token");
+            return;
+          }
+          const child = request.query["child-name"];
+          const recommendation = request.query["recommendation-title"];
+          const response = await this.getRecommendationUsecase.execute(token, child, recommendation);
+          if (response === "not found") {
+            reply.status(404);
+            reply.send("user/child or recommendation not found");
+          }
+          if (response === "no access") {
+            reply.status(403);
+            reply.send("no access");
+          }
+          reply.status(200);
+          reply.send(response);
+        } catch (e) {
+          this.response500(e, reply);
+        }
+      },
+    );
   }
 
   private response500(e: unknown, reply: FastifyReply) {

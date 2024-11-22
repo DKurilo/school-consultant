@@ -3,6 +3,7 @@ import { IApp } from "../ports/app";
 import { IAuthenticate } from "../ports/authenticate";
 import { ICheckIfAuthenticated } from "../ports/check-if-authenticated";
 import { IGetChild } from "../ports/get-child";
+import {IGetRecommendation} from "../ports/get-recommendation";
 import { IGetUser } from "../ports/get-user";
 import { IRefreshTokens } from "../ports/refresh-tokens";
 import { ISaveRecommendation } from "../ports/save-recommendation";
@@ -18,6 +19,8 @@ export class WebReact implements IApp {
   private addChildUsecase: IAddChild;
   private getChildUsecase: IGetChild;
   private saveRecommendation: ISaveRecommendation;
+  private getRecommendation: IGetRecommendation;
+
   public constructor(
     refreshInterval: number,
     checkAuthInterval: number,
@@ -28,6 +31,7 @@ export class WebReact implements IApp {
     addChildUsecase: IAddChild,
     getChildUsecase: IGetChild,
     saveRecommendation: ISaveRecommendation,
+    getRecommendation: IGetRecommendation,
   ) {
     this.refreshInterval = refreshInterval;
     this.checkAuthInterval = checkAuthInterval;
@@ -38,6 +42,7 @@ export class WebReact implements IApp {
     this.addChildUsecase = addChildUsecase;
     this.getChildUsecase = getChildUsecase;
     this.saveRecommendation = saveRecommendation;
+    this.getRecommendation = getRecommendation;
   }
   public run(): void {
     // start token refresh process
@@ -54,6 +59,7 @@ export class WebReact implements IApp {
       this.addChildUsecase,
       this.getChildUsecase,
       this.saveRecommendation,
+      this.getRecommendation,
     );
   }
 }
