@@ -179,14 +179,17 @@ export class FastifyWebServer implements IApp {
         if (result === "no access") {
           reply.status(403);
           reply.send("no access");
+          return;
         }
         if (result === "user not found") {
           reply.status(404);
           reply.send("user not found");
+          return;
         }
         if (result === "child already exists") {
           reply.status(400);
           reply.send("child already exists");
+          return;
         }
         reply.statusCode = 201;
         reply.send();
@@ -212,10 +215,12 @@ export class FastifyWebServer implements IApp {
           if (response === "not found") {
             reply.status(404);
             reply.send("user not found");
+            return;
           }
           if (response === "no access") {
             reply.status(403);
             reply.send("no access");
+            return;
           }
           reply.status(200);
           reply.send(response);
@@ -242,14 +247,22 @@ export class FastifyWebServer implements IApp {
         if (result === "no access") {
           reply.status(403);
           reply.send("no access");
+          return;
         }
         if (result === "user not found") {
           reply.status(404);
           reply.send("user not found");
+          return;
         }
         if (result === "child not found") {
           reply.status(404);
           reply.send("child not found");
+          return;
+        }
+        if (result === "could not save") {
+          reply.status(400);
+          reply.send("could not save");
+          return;
         }
         reply.statusCode = 201;
         reply.send();
@@ -280,10 +293,12 @@ export class FastifyWebServer implements IApp {
           if (response === "not found") {
             reply.status(404);
             reply.send("user/child or recommendation not found");
+            return;
           }
           if (response === "no access") {
             reply.status(403);
             reply.send("no access");
+            return;
           }
           reply.status(200);
           reply.send(response);

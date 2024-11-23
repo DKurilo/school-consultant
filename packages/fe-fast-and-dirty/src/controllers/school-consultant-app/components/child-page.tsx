@@ -1,6 +1,7 @@
 import * as React from "react";
 import { IGetChild } from "../../../ports/get-child";
 import "./styles/child-page.css";
+import { RecommendationStatus } from "@school-consultant/common/src/domains/recommendation";
 
 export type ChildPageParams = {
   childName: string;
@@ -14,7 +15,7 @@ export type ChildPageParams = {
 
 export const ChildPage = (params: ChildPageParams) => {
   const [recommendations, setRecommendations] = React.useState<
-    Record<string, boolean>
+    Record<string, RecommendationStatus>
   >({});
 
   const loadChild = async () => {
@@ -26,16 +27,18 @@ export const ChildPage = (params: ChildPageParams) => {
     loadChild();
   }, []);
 
-  const handlerEditRecommendation = React.useMemo(
-    () => (name: string | undefined) => {
-      params.recommendationCallback(params.childName, name);
-    },
-    [],
-  );
-
-  const handlerViewRecommendation = React.useMemo(
-    () => (name: string) => {
-      alert(`View ${name} recommendation`);
+  const handlerClickRecommendation = React.useMemo(
+    () => (name: string | undefined, status: RecommendationStatus) => {
+      switch (status) {
+        case "new":
+          params.recommendationCallback(params.childName, name);
+          return;
+        case "ready":
+          alert(`View ${name} recommendation`);
+          return;
+        default:
+          return;
+      }
     },
     [],
   );
@@ -45,20 +48,18 @@ export const ChildPage = (params: ChildPageParams) => {
       <div onClick={params.backCallback}>Back</div>
       <h1>{params.childName}</h1>
       <ul>
-        {Object.entries(recommendations).map(([recommendation, isFinished]) => (
+        {Object.entries(recommendations).map(([recommendation, status]) => (
           <li
-            onClick={() =>
-              isFinished
-                ? handlerViewRecommendation(recommendation)
-                : handlerEditRecommendation(recommendation)
-            }
+            onClick={() => handlerClickRecommendation(recommendation, status)}
             key={recommendation}
           >
-            {isFinished ? "View" : "Edit"} {recommendation}
+            {recommendation} <i>{status}</i>
+            {status === "new" && " Click to Edit"}
+            {status === "ready" && " Click to View"}
           </li>
         ))}
       </ul>
-      <div onClick={() => handlerEditRecommendation(undefined)}>
+      <div onClick={() => handlerClickRecommendation(undefined, "new")}>
         New recommendation
       </div>
     </div>

@@ -8,7 +8,10 @@ import {
   Token,
 } from "@school-consultant/common";
 import { IUserPreserver } from "../ports/user-preserver";
-import { ISaveRecommendation } from "../ports/save-recommendation";
+import {
+  ErrorReasons,
+  ISaveRecommendation,
+} from "../ports/save-recommendation";
 
 const asyncRandomInt = (min: number, max: number): Promise<number> =>
   new Promise((resolve, reject) => {
@@ -68,7 +71,7 @@ export class SaveRecommendation implements ISaveRecommendation {
     token: string,
     child: string,
     recommendation: RecommendationInput,
-  ): Promise<void | "no access" | "user not found" | "child not found"> {
+  ): Promise<void | ErrorReasons> {
     const tokenContent = await this.getTokenContent(token);
 
     if (tokenContent === undefined) {
@@ -86,6 +89,13 @@ export class SaveRecommendation implements ISaveRecommendation {
     const currentRecommendation =
       user.children[child].recommendations?.[recommendation.title];
 
+    if (
+      currentRecommendation !== undefined &&
+      currentRecommendation.status !== "new"
+    ) {
+      return "could not save";
+    }
+
     if (currentRecommendation === undefined) {
       const key = await this.generateReadOnlyKey();
       const rec: Recommendation = {
@@ -95,6 +105,7 @@ export class SaveRecommendation implements ISaveRecommendation {
         address: recommendation.address,
         readOnlyKey: key,
         schools: [],
+        status: "new",
       };
       user.children[child].recommendations[recommendation.title] = rec;
       this.userPreserver.preserveUser(user);
