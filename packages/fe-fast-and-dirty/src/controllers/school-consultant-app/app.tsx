@@ -11,6 +11,7 @@ import { IAddChild } from "../../ports/add-child";
 import { IGetChild } from "../../ports/get-child";
 import { ISaveRecommendation } from "../../ports/save-recommendation";
 import { IGetRecommendation } from "../../ports/get-recommendation";
+import { IBuildRecommendation } from "../../ports/build-recommendation";
 
 export type SchoolConsultantParams = {
   checkAuthInterval: number;
@@ -21,6 +22,7 @@ export type SchoolConsultantParams = {
   getChild: IGetChild;
   saveRecommendation: ISaveRecommendation;
   getRecommendation: IGetRecommendation;
+  buildRecommendation: IBuildRecommendation;
 };
 
 const darkTheme = createTheme({
@@ -62,6 +64,7 @@ export const SchoolConsultant = (params: SchoolConsultantParams) => {
           getChild={params.getChild}
           saveRecommendation={params.saveRecommendation}
           getRecommendation={params.getRecommendation}
+          buildRecommendation={params.buildRecommendation}
         ></Page>
       )}
     </ThemeProvider>

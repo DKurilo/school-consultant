@@ -7,6 +7,7 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/system/Stack";
 import Button from "@mui/material/Button";
 import { IGetRecommendation } from "../../../ports/get-recommendation";
+import { IBuildRecommendation } from "../../../ports/build-recommendation";
 
 const commonInterests = [
   "STEM",
@@ -28,6 +29,7 @@ export type EditRecommendationPageParams = {
   child: string;
   saveRecommendation: ISaveRecommendation;
   getRecommendation: IGetRecommendation;
+  buildRecommendation: IBuildRecommendation;
   recommendation?: string;
   backCallback: () => void;
 };
@@ -60,10 +62,17 @@ export const EditRecommendationPage = (
       setTitle(recommendation.title);
       setInterests(recommendation.interests);
       setAdditionalInfo(recommendation.additionalInfo);
-      setZip(recommendation.address.zip);
-      setStreet(recommendation.address.street);
-      setCity(recommendation.address.city);
-      setState(recommendation.address.state);
+      if ("zip" in recommendation.address) {
+        setZip(recommendation.address.zip);
+        setStreet(recommendation.address.street);
+        setCity(recommendation.address.city);
+        setState(recommendation.address.state);
+      } else {
+        setZip("");
+        setStreet("");
+        setCity("");
+        setState("");
+      }
       if (recommendation.status === "new") {
         setShowBuild(true);
       } else {
@@ -101,7 +110,7 @@ export const EditRecommendationPage = (
 
   const handleBuildRecommendation = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    alert("build recomendation");
+    await params.buildRecommendation.execute(params.child, title);
     params.backCallback();
   };
 

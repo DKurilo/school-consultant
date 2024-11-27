@@ -16,7 +16,9 @@ import { IAddChild } from "../ports/add-child";
 import { IGetChild } from "../ports/get-child";
 import { ISaveRecommendation } from "../ports/save-recommendation";
 import { RecommendationInputParser } from "@school-consultant/common";
-import { IGetRecommendation } from "../ports/get-gecommendation";
+import { IGetRecommendation } from "../ports/get-recommendation";
+import { IBuildRecommendation } from "../ports/build-recommendation";
+import { IGetReadOnlyRecommendation } from "../ports/get-read-only-recommendation";
 
 const LoginParser = z.object({
   email: z.string(),
@@ -38,10 +40,12 @@ const RecommendationAndChildParser = z.object({
   recommendation: RecommendationInputParser,
 });
 
-type RecommendationRequest = {
-  "child-name": string;
-  "recommendation-title": string;
-};
+const RecommendationRequestParser = z.object({
+  "child-name": z.string(),
+  "recommendation-title": z.string(),
+});
+
+type RecommendationRequest = z.infer<typeof RecommendationRequestParser>;
 
 export class FastifyWebServer implements IApp {
   private server: FastifyInstance<
@@ -60,6 +64,8 @@ export class FastifyWebServer implements IApp {
   private getChildUsecase: IGetChild;
   private saveRecommendationUsecase: ISaveRecommendation;
   private getRecommendationUsecase: IGetRecommendation;
+  private buildRecommendationUsecase: IBuildRecommendation;
+  private getReadOnlyRecommendationUsecase: IGetReadOnlyRecommendation;
 
   public constructor(
     logger: ILogger,
@@ -72,6 +78,8 @@ export class FastifyWebServer implements IApp {
     getChildUsecase: IGetChild,
     saveRecommendationUsecase: ISaveRecommendation,
     getRecommendationUsecase: IGetRecommendation,
+    buildRecommendationUsecase: IBuildRecommendation,
+    getReadOnlyRecommendationUsecase: IGetReadOnlyRecommendation,
   ) {
     this.logger = logger;
     this.port = port;
@@ -83,11 +91,12 @@ export class FastifyWebServer implements IApp {
     this.getChildUsecase = getChildUsecase;
     this.saveRecommendationUsecase = saveRecommendationUsecase;
     this.getRecommendationUsecase = getRecommendationUsecase;
+    this.buildRecommendationUsecase = buildRecommendationUsecase;
+    this.getReadOnlyRecommendationUsecase = getReadOnlyRecommendationUsecase;
     this.server = fastify({ loggerInstance: this.logger });
     this.server.register(cors, { origin: this.origin });
 
     this.server.get("/health", async (request, reply) => {
-      console.log(request.headers);
       reply.statusCode = 200;
       reply.send("ok");
     });
@@ -307,6 +316,71 @@ export class FastifyWebServer implements IApp {
         }
       },
     );
+
+    this.server.get<{ Querystring: { "ro-key": string } }>(
+      "/recommendation/read-only",
+      async (request, reply) => {
+        try {
+          const readOnlyKey = request.query["ro-key"];
+          const response =
+            await this.getReadOnlyRecommendationUsecase.execute(readOnlyKey);
+          if (response === "not found") {
+            reply.status(404);
+            reply.send("recommendation not found");
+            return;
+          }
+          reply.status(200);
+          reply.send(response);
+        } catch (e) {
+          this.response500(e, reply);
+        }
+      },
+    );
+
+    this.server.post("/recommendation/build", async (request, reply) => {
+      try {
+        const body = RecommendationRequestParser.parse(request.body);
+        const token = this.getJwt(request.headers);
+        if (token === undefined) {
+          reply.status(403);
+          reply.send("no token");
+          return;
+        }
+        const callback = (
+          err: undefined | "not found" | "no access" | "already finished",
+        ) => {
+          if (err === "no access") {
+            reply.status(403);
+            reply.send("no access");
+            return;
+          }
+          if (err === "not found") {
+            reply.status(404);
+            reply.send("not found");
+            return;
+          }
+          if (err === "already finished") {
+            reply.status(400);
+            reply.send("already finished");
+            return;
+          }
+          reply.statusCode = 201;
+          reply.send();
+        };
+        await this.buildRecommendationUsecase.execute(
+          token,
+          body["child-name"],
+          body["recommendation-title"],
+          callback,
+        );
+      } catch (e) {
+        this.logger.error(`error ${e}`);
+        if (!reply.sent) {
+          reply.statusCode = 500;
+          reply.send("something is wrong");
+        }
+      }
+    });
   }
 
   private response500(e: unknown, reply: FastifyReply) {

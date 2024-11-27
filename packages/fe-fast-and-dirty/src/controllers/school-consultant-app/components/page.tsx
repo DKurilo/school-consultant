@@ -7,6 +7,7 @@ import { ChildPage } from "./child-page";
 import { ISaveRecommendation } from "../../../ports/save-recommendation";
 import { EditRecommendationPage } from "./edit-recommendation-page";
 import { IGetRecommendation } from "../../../ports/get-recommendation";
+import { IBuildRecommendation } from "../../../ports/build-recommendation";
 
 export type PageParams = {
   getUser: IGetUser;
@@ -14,6 +15,7 @@ export type PageParams = {
   getChild: IGetChild;
   saveRecommendation: ISaveRecommendation;
   getRecommendation: IGetRecommendation;
+  buildRecommendation: IBuildRecommendation;
 };
 
 export const Page = (params: PageParams) => {
@@ -69,6 +71,7 @@ export const Page = (params: PageParams) => {
           backCallback={() => userPageChildCallback(currentPage[1])}
           getRecommendation={params.getRecommendation}
           saveRecommendation={params.saveRecommendation}
+          buildRecommendation={params.buildRecommendation}
         />
       );
     default:

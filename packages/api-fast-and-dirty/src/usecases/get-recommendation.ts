@@ -3,7 +3,7 @@ import { ILogger } from "../ports/logger";
 import { ITokenChecker } from "../ports/token-checker";
 import { Token } from "@school-consultant/common/src/domains/token";
 import { Recommendation } from "@school-consultant/common";
-import { IGetRecommendation } from "../ports/get-gecommendation";
+import { IGetRecommendation } from "../ports/get-recommendation";
 
 export class GetRecommendation implements IGetRecommendation {
   private logger: ILogger;

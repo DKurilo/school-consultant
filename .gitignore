@@ -1,5 +1,6 @@
 dist
 node_modules
 packages/api-fast-and-dirty/storage/**/*
-!packages/api-fast-and-dirty/storage/.gitkeep
+!packages/api-fast-and-dirty/storage/users/.gitkeep
+!packages/api-fast-and-dirty/storage/recommendations/.gitkeep
 **/.env

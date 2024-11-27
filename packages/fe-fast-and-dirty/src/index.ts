@@ -35,6 +35,10 @@ import { IRecommendationGetter } from "./ports/recommendation-getter";
 import { RecommendationGetter } from "./gateways/recommendation-getter";
 import { IGetRecommendation } from "./ports/get-recommendation";
 import { GetRecommendation } from "./usecases/get-recommendation";
+import { IBuildRecommendation } from "./ports/build-recommendation";
+import { BuildRecommendation } from "./usecases/build-recommendation";
+import { IRecommendationBuilder } from "./ports/recommendation-builder";
+import { RecommendationBuilder } from "./gateways/recommendation-builder";
 
 declare let WEBPACK_CONFIG: unknown;
 
@@ -85,6 +89,12 @@ const main = () => {
     tokensGetter,
     recommendationGetter,
   );
+  const recommendationBuilder: IRecommendationBuilder =
+    new RecommendationBuilder(serverUrl);
+  const buildRecommendation: IBuildRecommendation = new BuildRecommendation(
+    tokensGetter,
+    recommendationBuilder,
+  );
   const app: IApp = new WebReact(
     conf.REFRESH_MS,
     conf.CHECK_AUTH_INTERVAL_MS,
@@ -96,6 +106,7 @@ const main = () => {
     getChildUsecase,
     saveRecommendation,
     getRecommendationUsecase,
+    buildRecommendation,
   );
   app.run();
 };
