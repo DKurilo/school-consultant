@@ -11,6 +11,10 @@ export type ChildPageParams = {
     child: string,
     recommendation: string | undefined,
   ) => void;
+  viewRecommendationCallback: (
+    child: string,
+    recommendation: string | undefined,
+  ) => void;
 };
 
 export const ChildPage = (params: ChildPageParams) => {
@@ -34,7 +38,7 @@ export const ChildPage = (params: ChildPageParams) => {
           params.recommendationCallback(params.childName, name);
           return;
         case "ready":
-          alert(`View ${name} recommendation`);
+          params.viewRecommendationCallback(params.childName, name);
           return;
         default:
           return;

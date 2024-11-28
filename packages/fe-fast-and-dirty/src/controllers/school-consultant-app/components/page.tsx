@@ -8,6 +8,7 @@ import { ISaveRecommendation } from "../../../ports/save-recommendation";
 import { EditRecommendationPage } from "./edit-recommendation-page";
 import { IGetRecommendation } from "../../../ports/get-recommendation";
 import { IBuildRecommendation } from "../../../ports/build-recommendation";
+import { ViewRecommendationPage } from "./view-recomendation-page";
 
 export type PageParams = {
   getUser: IGetUser;
@@ -37,6 +38,13 @@ export const Page = (params: PageParams) => {
     [setCurrentPage],
   );
 
+  const userPageViewRecommendationCallback = React.useMemo(
+    () => (child: string, recommendation: string | undefined) => {
+      setCurrentPage(["view-recommendation", child, recommendation]);
+    },
+    [setCurrentPage],
+  );
+
   const userPageBackCallback = React.useMemo(
     () => () => {
       setCurrentPage(["user"]);
@@ -61,6 +69,7 @@ export const Page = (params: PageParams) => {
           childName={currentPage[1]}
           backCallback={userPageBackCallback}
           recommendationCallback={userPageRecommendationCallback}
+          viewRecommendationCallback={userPageViewRecommendationCallback}
         />
       );
     case "edit-recommendation":
@@ -72,6 +81,15 @@ export const Page = (params: PageParams) => {
           getRecommendation={params.getRecommendation}
           saveRecommendation={params.saveRecommendation}
           buildRecommendation={params.buildRecommendation}
+        />
+      );
+    case "view-recommendation":
+      return (
+        <ViewRecommendationPage
+          child={currentPage[1]}
+          recommendation={currentPage[2]}
+          backCallback={() => userPageChildCallback(currentPage[1])}
+          getRecommendation={params.getRecommendation}
         />
       );
     default:
