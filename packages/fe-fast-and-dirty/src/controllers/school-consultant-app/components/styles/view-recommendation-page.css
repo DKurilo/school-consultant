@@ -1,0 +1,57 @@
+.schools-box {
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+.schools-list-box {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20%;
+  height: 100%;
+  overflow: scroll;
+}
+
+.schools-list-box ul {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.schools-list-box ul li {
+  box-sizing: content-box;
+  margin: 0;
+  padding: 5px 10px 5px 0px;
+  list-style-type: none;
+  border-bottom: 1px solid white;
+  cursor: pointer;
+}
+
+.schools-list-box ul li:hover, .schools-list-box ul li.hovered {
+  background-color: #202020;
+}
+
+.schools-list-box ul li.selected {
+  background-color: #303030;
+}
+
+.schools-list-box ul li.selected:hover {
+  background-color: #404040;
+}
+
+.schools-map {
+  position: absolute;
+  left: 20%;
+  top: 0;
+  width: 80%;
+  height: 100%;
+}
+
+.selected-marker {
+  z-index: 1000;
+}
+
+.hovered-marker {
+  z-index: 1100;
+}

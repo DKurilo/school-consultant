@@ -52,6 +52,7 @@ const ConfigParser = z.object({
   OPENAI_ORGANIZATION: z.string(),
   OPENAI_PROJECT: z.string(),
   OPENAI_SECRET: z.string(),
+  OPENAI_MODEL: z.string(),
   GOOGLE_API_KEY: z.string(),
 });
 
@@ -120,6 +121,7 @@ const main = () => {
     conf.OPENAI_ORGANIZATION,
     conf.OPENAI_PROJECT,
     conf.OPENAI_SECRET,
+    conf.OPENAI_MODEL,
   );
   const googleDriver = new GoogleApiDriver(logger, conf.GOOGLE_API_KEY);
   const coordsGetter: ICoordsGetter = new GoogleCoordsGetter(

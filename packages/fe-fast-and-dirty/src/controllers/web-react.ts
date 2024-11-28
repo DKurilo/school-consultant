@@ -13,6 +13,7 @@ import { main } from "./school-consultant-app";
 export class WebReact implements IApp {
   private refreshInterval: number;
   private checkAuthInterval: number;
+  private googleApiKey: string;
   private authenticateUsecase: IAuthenticate;
   private refreshTokensUsecase: IRefreshTokens;
   private checkAuthUsecase: ICheckIfAuthenticated;
@@ -26,6 +27,7 @@ export class WebReact implements IApp {
   public constructor(
     refreshInterval: number,
     checkAuthInterval: number,
+    googleApiKey: string,
     authenticateUsecase: IAuthenticate,
     refreshTokensUsecase: IRefreshTokens,
     checkAuthUsecase: ICheckIfAuthenticated,
@@ -38,6 +40,7 @@ export class WebReact implements IApp {
   ) {
     this.refreshInterval = refreshInterval;
     this.checkAuthInterval = checkAuthInterval;
+    this.googleApiKey = googleApiKey;
     this.authenticateUsecase = authenticateUsecase;
     this.refreshTokensUsecase = refreshTokensUsecase;
     this.checkAuthUsecase = checkAuthUsecase;
@@ -56,6 +59,7 @@ export class WebReact implements IApp {
     }, this.refreshInterval);
     // start app
     main(
+      this.googleApiKey,
       this.checkAuthInterval,
       this.authenticateUsecase,
       this.checkAuthUsecase,

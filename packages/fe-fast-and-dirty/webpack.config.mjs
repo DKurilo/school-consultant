@@ -63,6 +63,8 @@ const buildConfig = () => {
           CHECK_AUTH_INTERVAL_MS: process.env?.CHECK_AUTH_INTERVAL_MS,
           // eslint-disable-next-line no-undef
           SERVER_URL: process.env?.SERVER_URL,
+          // eslint-disable-next-line no-undef
+          GOOGLE_API_KEY: process.env?.GOOGLE_API_KEY,
         }),
       }),
       new webpack.SourceMapDevToolPlugin({}),

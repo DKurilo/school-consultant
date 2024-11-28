@@ -11,6 +11,7 @@ import { IGetRecommendation } from "../../ports/get-recommendation";
 import { IBuildRecommendation } from "../../ports/build-recommendation";
 
 export const main = (
+  googleApiKey: string,
   checkAuthInterval: number,
   authenticateUsecase: IAuthenticate,
   checkAuthUsecase: ICheckIfAuthenticated,
@@ -24,6 +25,7 @@ export const main = (
   const root = createRoot(document.getElementById("root"));
   root.render(
     <SchoolConsultant
+      googleApiKey={googleApiKey}
       checkAuthInterval={checkAuthInterval}
       auth={authenticateUsecase}
       checkAuth={checkAuthUsecase}

@@ -47,6 +47,7 @@ const ConfigParser = z.object({
   CHECK_AUTH_INTERVAL_MS: z.coerce.number(),
   SERVER_URL: z.string(),
   NODE_ENV: z.string(),
+  GOOGLE_API_KEY: z.string(),
 });
 
 const main = () => {
@@ -98,6 +99,7 @@ const main = () => {
   const app: IApp = new WebReact(
     conf.REFRESH_MS,
     conf.CHECK_AUTH_INTERVAL_MS,
+    conf.GOOGLE_API_KEY,
     authenticateUsecase,
     refreshTokensUsecase,
     checkIfAuthenticatedUsecase,

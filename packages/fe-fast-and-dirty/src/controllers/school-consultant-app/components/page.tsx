@@ -11,6 +11,7 @@ import { IBuildRecommendation } from "../../../ports/build-recommendation";
 import { ViewRecommendationPage } from "./view-recomendation-page";
 
 export type PageParams = {
+  googleApiKey: string;
   getUser: IGetUser;
   addChild: IAddChild;
   getChild: IGetChild;
@@ -86,6 +87,7 @@ export const Page = (params: PageParams) => {
     case "view-recommendation":
       return (
         <ViewRecommendationPage
+          googleApiKey={params.googleApiKey}
           child={currentPage[1]}
           recommendation={currentPage[2]}
           backCallback={() => userPageChildCallback(currentPage[1])}

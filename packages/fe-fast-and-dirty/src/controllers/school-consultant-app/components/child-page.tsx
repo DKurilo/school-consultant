@@ -2,6 +2,7 @@ import * as React from "react";
 import { IGetChild } from "../../../ports/get-child";
 import "./styles/child-page.css";
 import { RecommendationStatus } from "@school-consultant/common/src/domains/recommendation";
+import Button from "@mui/material/Button";
 
 export type ChildPageParams = {
   childName: string;
@@ -49,7 +50,16 @@ export const ChildPage = (params: ChildPageParams) => {
 
   return (
     <div className="child-page">
-      <div onClick={params.backCallback}>Back</div>
+      <div>
+        <Button
+          variant="contained"
+          type="submit"
+          size="small"
+          onClick={params.backCallback}
+        >
+          Back
+        </Button>
+      </div>
       <h1>{params.childName}</h1>
       <ul>
         {Object.entries(recommendations).map(([recommendation, status]) => (

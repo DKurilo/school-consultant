@@ -1,11 +1,27 @@
 import * as React from "react";
 import { IGetRecommendation } from "../../../ports/get-recommendation";
-import { Address, School } from "@school-consultant/common";
+import { Address, Coords, School } from "@school-consultant/common";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import {
+  AdvancedMarker,
+  APIProvider,
+  Map,
+  MapCameraChangedEvent,
+  MapCameraProps,
+  Pin,
+} from "@vis.gl/react-google-maps";
+import "./styles/view-recommendation-page.css";
+import Button from "@mui/material/Button";
+import Markdown from "react-markdown";
+
+const coordsToGoogleCoords = (coord: Coords): { lat: number; lng: number } => ({
+  lat: coord.latitude,
+  lng: coord.longitude,
+});
 
 const buildAddress = (addr: Address): string => {
   if ("addr" in addr) {
@@ -17,10 +33,27 @@ const buildAddress = (addr: Address): string => {
   return "";
 };
 
+const readableTime = (secs: number): string => {
+  const mins = Math.floor(secs / 60) % 60;
+  const hrs = Math.floor(secs / 60 / 60);
+  if (hrs > 0) {
+    return `${hrs} h ${mins} min`;
+  }
+  return `${mins} min`;
+};
+
+const buildCamera = (coords: Coords): MapCameraProps => {
+  return {
+  center: {lat: coords.latitude, lng: coords.longitude},
+  zoom: 10,
+};
+};
+
 export type ViewRecommendationPageParams = {
+  googleApiKey: string;
   child: string;
   getRecommendation: IGetRecommendation;
-  recommendation?: string;
+  recommendation: string;
   backCallback: () => void;
 };
 
@@ -32,12 +65,26 @@ export const ViewRecommendationPage = (
   const [interests, setInterests] = React.useState<string[]>([]);
   const [additionalInfo, setAdditionalInfo] = React.useState("");
   const [address, setAddress] = React.useState("");
+  const [childCoords, setChildCoords] = React.useState<{
+    lat: number;
+    lng: number;
+  }>({ lat: 0, lng: 0 });
   const [rankTimeCoef, setRankTimeCoef] = React.useState(500);
   const [useWalk, setUseWalk] = React.useState(true);
   const [useCar, setUseCar] = React.useState(true);
   const [useTransport, setUseTransport] = React.useState(true);
   const [schools, setSchools] = React.useState<School[]>([]);
   const [originalSchools, setOriginalSchools] = React.useState<School[]>([]);
+  const [hoveredSchool, setHoveredShool] = React.useState<number | undefined>(
+    undefined,
+  );
+  const [selectedSchool, setSelectedShool] = React.useState<number | undefined>(
+    undefined,
+  );
+  const [expandedSchool, setExpandedShool] = React.useState<number | undefined>(
+    undefined,
+  );
+  const [cameraProps, setCameraProps] = React.useState<MapCameraProps>({center: childCoords, zoom: 10});
 
   React.useEffect(() => {
     const getTime = (school: School) => {
@@ -78,6 +125,9 @@ export const ViewRecommendationPage = (
     });
 
     setSchools(newSchools);
+    setExpandedShool(undefined);
+    setSelectedShool(undefined);
+    setHoveredShool(undefined);
   }, [
     useCar,
     useWalk,
@@ -101,7 +151,9 @@ export const ViewRecommendationPage = (
       setInterests(recommendation.interests);
       setAdditionalInfo(recommendation.additionalInfo);
       setAddress(buildAddress(recommendation.address));
+      setChildCoords(coordsToGoogleCoords(recommendation.address.coords));
       setOriginalSchools(recommendation.schools);
+      setCameraProps(buildCamera(recommendation.address.coords));
     };
     doer();
   }, []);
@@ -131,9 +183,37 @@ export const ViewRecommendationPage = (
     setUseCar(newValue);
   };
 
+  const getPinColor = React.useCallback(
+      (i: number): string => {
+        if (selectedSchool === i) {
+          return "#0055ff";
+        }
+        if (hoveredSchool === i) {
+          return "#0022ee";
+        }
+        return "#002288";
+      },
+    [selectedSchool, hoveredSchool],
+  );
+
+  const handleCameraChange = React.useCallback((ev: MapCameraChangedEvent) => {
+      setCameraProps(ev.detail);
+    },
+    [setCameraProps]
+  );
+
   return (
     <div className="viewrecommendation-page">
-      <div onClick={params.backCallback}>Back</div>
+      <div>
+        <Button
+          variant="contained"
+          type="submit"
+          size="small"
+          onClick={params.backCallback}
+        >
+          Back
+        </Button>
+      </div>
       <h1>{title}</h1>
       <h2>Sharebale link</h2>
       <p>{readOnlyKey}</p>
@@ -185,26 +265,117 @@ export const ViewRecommendationPage = (
           />
         </FormGroup>
       </Box>
-      <h3>List</h3>
-      <div>
-        <div>
-          <ul>
-            {schools.map((school) => {
-              return (
-                <li key={school.name}>
-                  <h4>{school.name}</h4>
-                  <p>{school.description}</p>
-                  <p>Rank: {school.rank}</p>
-                  <p>
-                    Car/Walk/Transport: {school.carTime}/{school.walkTime}/
-                    {school.transportTime}
-                  </p>
-                </li>
-              );
-            })}
-          </ul>
+      {expandedSchool === undefined && (
+        <div hidden={expandedSchool !== undefined}>
+          <h3>List</h3>
+          <div className="schools-box">
+            <div className="schools-list-box">
+              <ul>
+                {schools.map((school, i) => {
+                  return (
+                    <li
+                      key={school.name}
+                      className={[
+                        i === selectedSchool ? "selected" : "",
+                        i === hoveredSchool ? "hovered" : "",
+                      ].join(" ")}
+                      onClick={() => setSelectedShool(i)}
+                      onMouseEnter={() => setHoveredShool(i)}
+                      onMouseLeave={() => setHoveredShool(undefined)}
+                    >
+                      <h4>{school.name}</h4>
+                      <p>
+                        {school.description}
+                        <br />
+                        Rank: {school.rank}
+                        <br />
+                        Driving: {readableTime(school.carTime)}
+                        <br />
+                        Walk: {readableTime(school.walkTime)}
+                        <br />
+                        Transit: {readableTime(school.transportTime)}
+                        <br />
+                        <Button
+                          variant="contained"
+                          type="submit"
+                          size="small"
+                          onClick={() => setExpandedShool(i)}
+                        >
+                          Show strategy
+                        </Button>
+                      </p>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+            <div className="schools-map">
+              <APIProvider apiKey={params.googleApiKey}>
+                <Map
+                  {...cameraProps}
+                  onCameraChanged={handleCameraChange}
+                  mapId={`recomendation-${params.recommendation}`}
+                >
+                  <AdvancedMarker position={childCoords}>
+                    <Pin
+                      background={"#FBBC04"}
+                      glyphColor={"#000"}
+                      borderColor={"#000"}
+                    />
+                  </AdvancedMarker>
+                  {schools.map((school, i) => (
+                    <AdvancedMarker
+                      position={coordsToGoogleCoords(school.address.coords)}
+                      key={school.rank}
+                      zIndex={
+                        (selectedSchool === i ? 100 : 0) +
+                        (hoveredSchool === i ? 1000 : 0)
+                      }
+                      onClick={() => setSelectedShool(i)}
+                      onMouseEnter={() => setHoveredShool(i)}
+                      onMouseLeave={() => setHoveredShool(undefined)}
+                    >
+                      <Pin
+                        background={getPinColor(i)}
+                        glyphColor={"#000"}
+                        borderColor={"#000"}
+                      />
+                    </AdvancedMarker>
+                  ))}
+                </Map>
+              </APIProvider>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+      {expandedSchool !== undefined && (
+        <div style={({marginTop: "50px"})}>
+          <div>
+            <Button
+              variant="contained"
+              type="submit"
+              size="small"
+              onClick={() => setExpandedShool(undefined)}
+            >
+              Close
+            </Button>
+          </div>
+          <div>
+            <h3>{schools[expandedSchool].name}</h3>
+            <p>{schools[expandedSchool].description}</p>
+            <p>{buildAddress(schools[expandedSchool].address)}</p>
+            <p>
+              Driving: {readableTime(schools[expandedSchool].carTime)}
+              <br />
+              Walk: {readableTime(schools[expandedSchool].walkTime)}
+              <br />
+              Transit: {readableTime(schools[expandedSchool].transportTime)}
+            </p>
+            <h4>Strategy</h4>
+            <Markdown>{schools[expandedSchool].strategy}</Markdown>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

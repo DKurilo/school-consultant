@@ -4,13 +4,14 @@ import { ILogger } from "../ports/logger";
 export class OpenaiDriver {
   private logger: ILogger;
   private client: OpenAI;
-  private model: OpenAI.Chat.ChatModel = "gpt-4o-mini";
+  private model: OpenAI.Chat.ChatModel;
 
   public constructor(
     logger: ILogger,
     organization: string,
     project: string,
     secret: string,
+    model: string,
   ) {
     this.logger = logger;
     this.client = new OpenAI({
@@ -18,6 +19,7 @@ export class OpenaiDriver {
       project,
       apiKey: secret,
     });
+    this.model = model as OpenAI.Chat.ChatModel;
   }
 
   public async getResponse(

@@ -14,6 +14,7 @@ import { IGetRecommendation } from "../../ports/get-recommendation";
 import { IBuildRecommendation } from "../../ports/build-recommendation";
 
 export type SchoolConsultantParams = {
+  googleApiKey: string;
   checkAuthInterval: number;
   auth: IAuthenticate;
   checkAuth: ICheckIfAuthenticated;
@@ -59,6 +60,7 @@ export const SchoolConsultant = (params: SchoolConsultantParams) => {
       <Login show={!authenticated} onSubmit={authenticateHandler}></Login>
       {authenticated && (
         <Page
+          googleApiKey={params.googleApiKey}
           getUser={params.getUser}
           addChild={params.addChild}
           getChild={params.getChild}
