@@ -347,7 +347,12 @@ export class FastifyWebServer implements IApp {
           return;
         }
         const callback = (
-          err: undefined | "not found" | "no access" | "already finished",
+          err:
+            | undefined
+            | "not found"
+            | "no access"
+            | "already finished"
+            | "no attempts left",
         ) => {
           if (err === "no access") {
             reply.status(403);
@@ -362,6 +367,11 @@ export class FastifyWebServer implements IApp {
           if (err === "already finished") {
             reply.status(400);
             reply.send("already finished");
+            return;
+          }
+          if (err === "no attempts left") {
+            reply.status(403);
+            reply.send("not attempts left");
             return;
           }
           reply.statusCode = 201;

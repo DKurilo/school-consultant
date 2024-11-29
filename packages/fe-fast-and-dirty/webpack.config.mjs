@@ -4,7 +4,12 @@ import { fileURLToPath } from "node:url";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import webpack from "webpack";
 
-dotenv.config();
+// eslint-disable-next-line no-undef
+const ENV = process.env?.NODE_ENV ?? "development";
+dotenv.config({
+  // eslint-disable-next-line no-undef
+  path: path.resolve(process.cwd(), `.env.${ENV}`),
+});
 
 // Gets absolute path of file within app directory
 const __filename = fileURLToPath(import.meta.url);
@@ -18,8 +23,7 @@ const buildConfig = () => {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
   return {
-    // eslint-disable-next-line no-undef
-    mode: process.env?.NODE_ENV ?? "development",
+    mode: ENV,
     devtool: "inline-source-map",
     entry: "./src/index.ts",
     module: {
@@ -56,7 +60,7 @@ const buildConfig = () => {
       new webpack.DefinePlugin({
         WEBPACK_CONFIG: JSON.stringify({
           // eslint-disable-next-line no-undef
-          NODE_ENV: process.env?.NODE_ENV,
+          NODE_ENV: env,
           // eslint-disable-next-line no-undef
           REFRESH_MS: process.env?.REFRESH_MS,
           // eslint-disable-next-line no-undef
@@ -65,6 +69,8 @@ const buildConfig = () => {
           SERVER_URL: process.env?.SERVER_URL,
           // eslint-disable-next-line no-undef
           GOOGLE_API_KEY: process.env?.GOOGLE_API_KEY,
+          // eslint-disable-next-line no-undef
+          SELF_URL: process.env?.SELF_URL,
         }),
       }),
       new webpack.SourceMapDevToolPlugin({}),

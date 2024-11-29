@@ -92,8 +92,15 @@ export class OpenaiSchoolsListGetter implements ISchoolsListGetter {
       "zip" in recommendation.address
         ? `${recommendation.address.street}, ${recommendation.address.city}, ${recommendation.address.state}, ${recommendation.address.zip}`
         : recommendation.address.addr;
-    const systemPrompt = `You are a high school education consultant that works more than 10 years mostly ${systemLocation} and have a client with ${clientLocation} who you want to help to find their dream high school. Using data provided by client build a list of up to 50 high schools that are the best choice given clients location and interests and additional information. For each school add name, address, description and reason why you selected it. Put name, adress and description and reason to select on new line and separate schools with two empty lines, please. And return only high schools, please.`;
-    const userPropmt = `The client address is ${addrString}. The client has these interests: ${recommendation.interests.join(", ")}. And here is additional information to consider while preparing school list: ${recommendation.additionalInfo}`;
+    const systemPrompt = `You are a high school education consultant that works more than 10 years mostly ${systemLocation} and have a client with ${clientLocation} who you want to help to find the best high school for this kid. Using data provided by client build a list of up to 100 high schools that are the best choice given clients location, interests, and additional information. For each school add name, address, description, and explain why you selected it. Return only high schools, please. Response template for school should be:
+
+{rank}. **{school name}**
+Address: {address}
+Description: {description}
+Reason to select: {reason to select}
+---
+`;
+    const userPropmt = `The client's address is ${addrString}. The client has these interests: ${recommendation.interests.join(", ")}. And here is additional information to consider while preparing school list: ${recommendation.additionalInfo}`;
     const response = await this.openAIDriver.getResponse(
       recommendation.readOnlyKey,
       [

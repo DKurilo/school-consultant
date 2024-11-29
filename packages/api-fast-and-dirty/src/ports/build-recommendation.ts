@@ -5,7 +5,12 @@ export interface IBuildRecommendation {
     child: string,
     recommendationTitle: string,
     callback: (
-      err: undefined | "not found" | "no access" | "already finished",
+      err:
+        | undefined
+        | "not found"
+        | "no access"
+        | "already finished"
+        | "no attempts left",
     ) => void,
   ) => Promise<void>;
 }

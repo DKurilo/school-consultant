@@ -141,7 +141,16 @@ export const EditRecommendationPage = (
 
   return (
     <div className="editrecommendation-page">
-      <div onClick={params.backCallback}>Back</div>
+      <div onClick={params.backCallback}>
+        <Button
+          variant="contained"
+          type="submit"
+          size="small"
+          onClick={params.backCallback}
+        >
+          Back
+        </Button>
+      </div>
       <Stack direction="column">
         <TextField
           name="title"

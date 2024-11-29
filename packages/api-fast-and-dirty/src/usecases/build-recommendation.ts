@@ -61,7 +61,12 @@ export class BuildRecommendation implements IBuildRecommendation {
     childName: string,
     recommendationTitle: string,
     callback: (
-      err: undefined | "not found" | "no access" | "already finished",
+      err:
+        | undefined
+        | "not found"
+        | "no access"
+        | "already finished"
+        | "no attempts left",
     ) => void,
   ): Promise<void> {
     const tokenContent = await this.buildTokenContent(token);
@@ -76,6 +81,9 @@ export class BuildRecommendation implements IBuildRecommendation {
       callback("not found");
       return;
     }
+    if (user.attemptsLeft <= 0) {
+      callback("no attempts left");
+    }
     const child = user.children[childName];
     if (!(recommendationTitle in child.recommendations)) {
       callback("not found");
@@ -86,6 +94,7 @@ export class BuildRecommendation implements IBuildRecommendation {
     if (recommendation.status !== "new") {
       callback("already finished");
     }
+    user.attemptsLeft = user.attemptsLeft - 1;
     recommendation.status = "building";
     await this.userPreserver.preserveUser(user);
     callback(undefined);

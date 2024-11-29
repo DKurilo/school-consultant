@@ -26,7 +26,7 @@ export class OpenaiStrategyGenerator implements IStrategyGenerator {
         ? `${school.address.street}, ${school.address.city}, ${school.address.state}, ${school.address.zip}`
         : school.address.addr;
     const systemPrompt = `You are high a school education consultant that works more than 10 years mostly ${systemLocation} and have a client who wants to be in ${school.name} that is located in ${schoolAddr}`;
-    const userPropmt = `The client address is ${addrString}. The client has these interests: ${recommendation.interests.join(", ")}. And here is additional information to consider while : ${recommendation.additionalInfo}. The client wants to be in ${school.name} that is located in ${schoolAddr}. Prepare detailed strategy that can help the client to be invited to this school.`;
+    const userPropmt = `The client address is ${addrString}. The client has these interests: ${recommendation.interests.join(", ")}. And here is additional information to consider while : ${recommendation.additionalInfo}. The client wants to be in ${school.name} that is located in ${schoolAddr}. Write meaningful description for school including information about programs, student demographics, admission criteria and graduation rate. Add specific recommendation about what this kid can do to be invited to this school given his current situation.`;
     const response = await this.openAIDriver.getResponse(
       recommendation.readOnlyKey,
       [

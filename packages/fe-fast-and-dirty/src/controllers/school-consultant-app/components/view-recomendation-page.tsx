@@ -44,9 +44,9 @@ const readableTime = (secs: number): string => {
 
 const buildCamera = (coords: Coords): MapCameraProps => {
   return {
-  center: {lat: coords.latitude, lng: coords.longitude},
-  zoom: 10,
-};
+    center: { lat: coords.latitude, lng: coords.longitude },
+    zoom: 10,
+  };
 };
 
 export type ViewRecommendationPageParams = {
@@ -84,7 +84,10 @@ export const ViewRecommendationPage = (
   const [expandedSchool, setExpandedShool] = React.useState<number | undefined>(
     undefined,
   );
-  const [cameraProps, setCameraProps] = React.useState<MapCameraProps>({center: childCoords, zoom: 10});
+  const [cameraProps, setCameraProps] = React.useState<MapCameraProps>({
+    center: childCoords,
+    zoom: 10,
+  });
 
   React.useEffect(() => {
     const getTime = (school: School) => {
@@ -184,22 +187,23 @@ export const ViewRecommendationPage = (
   };
 
   const getPinColor = React.useCallback(
-      (i: number): string => {
-        if (selectedSchool === i) {
-          return "#0055ff";
-        }
-        if (hoveredSchool === i) {
-          return "#0022ee";
-        }
-        return "#002288";
-      },
+    (i: number): string => {
+      if (selectedSchool === i) {
+        return "#f28e2b";
+      }
+      if (hoveredSchool === i) {
+        return "#a0cbe8";
+      }
+      return "#4e79a7";
+    },
     [selectedSchool, hoveredSchool],
   );
 
-  const handleCameraChange = React.useCallback((ev: MapCameraChangedEvent) => {
+  const handleCameraChange = React.useCallback(
+    (ev: MapCameraChangedEvent) => {
       setCameraProps(ev.detail);
     },
-    [setCameraProps]
+    [setCameraProps],
   );
 
   return (
@@ -318,7 +322,7 @@ export const ViewRecommendationPage = (
                 >
                   <AdvancedMarker position={childCoords}>
                     <Pin
-                      background={"#FBBC04"}
+                      background={"#59a14f"}
                       glyphColor={"#000"}
                       borderColor={"#000"}
                     />
@@ -349,7 +353,7 @@ export const ViewRecommendationPage = (
         </div>
       )}
       {expandedSchool !== undefined && (
-        <div style={({marginTop: "50px"})}>
+        <div style={{ marginTop: "50px" }}>
           <div>
             <Button
               variant="contained"
