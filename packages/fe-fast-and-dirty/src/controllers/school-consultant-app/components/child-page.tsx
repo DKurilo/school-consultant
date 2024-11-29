@@ -3,6 +3,7 @@ import { IGetChild } from "../../../ports/get-child";
 import "./styles/child-page.css";
 import { RecommendationStatus } from "@school-consultant/common/src/domains/recommendation";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
 export type ChildPageParams = {
   childName: string;
@@ -53,7 +54,7 @@ export const ChildPage = (params: ChildPageParams) => {
       <div>
         <Button
           variant="contained"
-          type="submit"
+          type="button"
           size="small"
           onClick={params.backCallback}
         >
@@ -61,21 +62,25 @@ export const ChildPage = (params: ChildPageParams) => {
         </Button>
       </div>
       <h1>{params.childName}</h1>
-      <ul>
+      <Stack direction="column" spacing={1} alignItems="start">
         {Object.entries(recommendations).map(([recommendation, status]) => (
-          <li
+          <Button
             onClick={() => handlerClickRecommendation(recommendation, status)}
             key={recommendation}
           >
-            {recommendation} <i>{status}</i>
-            {status === "new" && " Click to Edit"}
-            {status === "ready" && " Click to View"}
-          </li>
+            Recommendation {recommendation} is {status}.
+            {status === "new" && " Click to Edit."}
+            {status === "ready" && " Click to View."}
+          </Button>
         ))}
-      </ul>
-      <div onClick={() => handlerClickRecommendation(undefined, "new")}>
-        New recommendation
-      </div>
+        <Button
+          variant="contained"
+          type="submit"
+          onClick={() => handlerClickRecommendation(undefined, "new")}
+        >
+          New recommendation
+        </Button>
+      </Stack>
     </div>
   );
 };

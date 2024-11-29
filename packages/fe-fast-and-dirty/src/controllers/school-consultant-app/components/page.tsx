@@ -18,6 +18,7 @@ export type PageParams = {
   saveRecommendation: ISaveRecommendation;
   getRecommendation: IGetRecommendation;
   buildRecommendation: IBuildRecommendation;
+  baseUrl: string;
 };
 
 export const Page = (params: PageParams) => {
@@ -92,6 +93,7 @@ export const Page = (params: PageParams) => {
           recommendation={currentPage[2]}
           backCallback={() => userPageChildCallback(currentPage[1])}
           getRecommendation={params.getRecommendation}
+          baseUrl={params.baseUrl}
         />
       );
     default:

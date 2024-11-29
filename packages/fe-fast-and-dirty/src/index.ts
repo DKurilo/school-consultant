@@ -39,6 +39,11 @@ import { IBuildRecommendation } from "./ports/build-recommendation";
 import { BuildRecommendation } from "./usecases/build-recommendation";
 import { IRecommendationBuilder } from "./ports/recommendation-builder";
 import { RecommendationBuilder } from "./gateways/recommendation-builder";
+import { IRoRecommendationGetter } from "./ports/ro-recommendation-getter";
+import { RoRecommendationGetter } from "./gateways/ro-recommendation-getter";
+import { IGetRoRecommendation } from "./ports/get-ro-recommendation";
+import { GetRoRecommendation } from "./usecases/get-ro-recommendation";
+import { WebReactRo } from "./controllers/web-react-ro";
 
 declare let WEBPACK_CONFIG: unknown;
 
@@ -48,6 +53,7 @@ const ConfigParser = z.object({
   SERVER_URL: z.string(),
   NODE_ENV: z.string(),
   GOOGLE_API_KEY: z.string(),
+  SELF_URL: z.string(),
 });
 
 const main = () => {
@@ -109,8 +115,32 @@ const main = () => {
     saveRecommendation,
     getRecommendationUsecase,
     buildRecommendation,
+    conf.SELF_URL,
   );
   app.run();
 };
 
-main();
+const mainRo = (roToken: string) => {
+  const conf = ConfigParser.parse(WEBPACK_CONFIG);
+  const serverUrl = conf.SERVER_URL;
+  const recommendationGetter: IRoRecommendationGetter =
+    new RoRecommendationGetter(serverUrl);
+  const getRecommendationUsecase: IGetRoRecommendation =
+    new GetRoRecommendation(recommendationGetter);
+  const app: IApp = new WebReactRo(
+    conf.GOOGLE_API_KEY,
+    getRecommendationUsecase,
+    roToken,
+  );
+  app.run();
+};
+
+if (document.location.search.startsWith("?ro-token=")) {
+  const roToken = document.location.search
+    .split("?")[1]
+    .split("&")[0]
+    .split("=")[1];
+  mainRo(roToken);
+} else {
+  main();
+}

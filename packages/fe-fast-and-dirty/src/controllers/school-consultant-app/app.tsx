@@ -24,6 +24,7 @@ export type SchoolConsultantParams = {
   saveRecommendation: ISaveRecommendation;
   getRecommendation: IGetRecommendation;
   buildRecommendation: IBuildRecommendation;
+  baseUrl: string;
 };
 
 const darkTheme = createTheme({
@@ -67,6 +68,7 @@ export const SchoolConsultant = (params: SchoolConsultantParams) => {
           saveRecommendation={params.saveRecommendation}
           getRecommendation={params.getRecommendation}
           buildRecommendation={params.buildRecommendation}
+          baseUrl={params.baseUrl}
         ></Page>
       )}
     </ThemeProvider>

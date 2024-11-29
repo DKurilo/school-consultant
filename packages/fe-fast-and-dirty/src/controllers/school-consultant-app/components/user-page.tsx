@@ -2,15 +2,9 @@ import * as React from "react";
 import { IGetUser } from "../../../ports/get-user";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { z } from "zod";
 import { IAddChild } from "../../../ports/add-child";
 import "./styles/user-page.css";
-
-const FormDataParser = z.object({
-  target: z.object({
-    name: z.object({ value: z.string() }),
-  }),
-});
+import Stack from "@mui/material/Stack";
 
 export type UserPageParams = {
   getUser: IGetUser;
@@ -23,7 +17,6 @@ export const UserPage = (params: UserPageParams) => {
   const [children, setChildren] = React.useState<Record<string, number>>({});
   const [attempts, setAttempts] = React.useState(0);
   const [newChildName, setNewChildName] = React.useState("");
-  const ref = React.useRef();
 
   const loadUser = async () => {
     const user = await params.getUser.execute();
@@ -35,12 +28,9 @@ export const UserPage = (params: UserPageParams) => {
     loadUser();
   }, []);
 
-  const handleAddChild = async (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    const data = FormDataParser.parse(e);
-    const name = data.target.name.value;
+  const handleAddChild = async () => {
     try {
-      await params.addChild.execute(name);
+      await params.addChild.execute(newChildName);
       setNewChildName("");
     } catch (e) {
       console.log(e);
@@ -55,34 +45,43 @@ export const UserPage = (params: UserPageParams) => {
 
   return (
     <div className="user-page">
-      <div>Click on child to see info.</div>
-      <div>
-        <small>You have {attempts} new recommendations left.</small>
-      </div>
+      <h1>Hi</h1>
+      {attempts > 1 && (
+        <p>You can build up to {attempts} new recommendations.</p>
+      )}
+      {attempts === 1 && <p>You can build {attempts} new recommendation.</p>}
+      {attempts < 1 && (
+        <p>
+          Sorry, you can't build new recommendations. You still can see already
+          created recommendations. Send e-mail to resource owner if you want
+          more recommendations.
+        </p>
+      )}
       <h1>Children</h1>
-      <ul>
+      <Stack direction="column" spacing={1} alignItems="start">
         {Object.entries(children).map(([child, n]) => (
-          <li onClick={() => params.childCallback(child)} key={child}>
-            {child} - {n} recommendations
-          </li>
+          <Button onClick={() => params.childCallback(child)} key={child}>
+            {child} has {n} {n === 1 ? "recommendation" : "recommendations"}.
+            Click to view.
+          </Button>
         ))}
-      </ul>
-      <form ref={ref} onSubmit={handleAddChild}>
-        <TextField
-          name="name"
-          type="text"
-          placeholder="child's name"
-          margin="none"
-          variant="filled"
-          hiddenLabel
-          size="small"
-          value={newChildName}
-          onChange={handleNewChildNameChange}
-        ></TextField>
-        <Button variant="contained" type="submit">
-          add child
-        </Button>
-      </form>
+        <Stack direction="row" spacing={2}>
+          <TextField
+            name="name"
+            type="text"
+            placeholder="child's name"
+            margin="none"
+            variant="filled"
+            hiddenLabel
+            size="small"
+            value={newChildName}
+            onChange={handleNewChildNameChange}
+          ></TextField>
+          <Button variant="contained" type="submit" onClick={handleAddChild}>
+            add child
+          </Button>
+        </Stack>
+      </Stack>
     </div>
   );
 };

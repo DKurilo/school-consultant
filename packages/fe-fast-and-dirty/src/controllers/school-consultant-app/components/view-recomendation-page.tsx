@@ -1,6 +1,12 @@
 import * as React from "react";
 import { IGetRecommendation } from "../../../ports/get-recommendation";
-import { Address, Coords, School } from "@school-consultant/common";
+import {
+  Address,
+  Coords,
+  ReadOnlyRecommendation,
+  Recommendation,
+  School,
+} from "@school-consultant/common";
 import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
 import FormGroup from "@mui/material/FormGroup";
@@ -17,6 +23,10 @@ import {
 import "./styles/view-recommendation-page.css";
 import Button from "@mui/material/Button";
 import Markdown from "react-markdown";
+import { IGetRoRecommendation } from "../../../ports/get-ro-recommendation";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import Stack from "@mui/material/Stack";
+import Link from "@mui/material/Link";
 
 const coordsToGoogleCoords = (coord: Coords): { lat: number; lng: number } => ({
   lat: coord.latitude,
@@ -49,17 +59,25 @@ const buildCamera = (coords: Coords): MapCameraProps => {
   };
 };
 
-export type ViewRecommendationPageParams = {
-  googleApiKey: string;
-  child: string;
-  getRecommendation: IGetRecommendation;
-  recommendation: string;
-  backCallback: () => void;
-};
+export type ViewRecommendationPageParams =
+  | {
+      googleApiKey: string;
+      child: string;
+      getRecommendation: IGetRecommendation;
+      recommendation: string;
+      backCallback: () => void;
+      baseUrl: string;
+    }
+  | {
+      googleApiKey: string;
+      roToken: string;
+      getRoRecommendation: IGetRoRecommendation;
+    };
 
 export const ViewRecommendationPage = (
   params: ViewRecommendationPageParams,
 ) => {
+  const [copied, setCopied] = React.useState(false);
   const [title, setTitle] = React.useState("");
   const [readOnlyKey, setReadOnlyKey] = React.useState("");
   const [interests, setInterests] = React.useState<string[]>([]);
@@ -141,14 +159,14 @@ export const ViewRecommendationPage = (
   ]);
 
   React.useEffect(() => {
-    if (params.recommendation === undefined) {
-      return;
-    }
     const doer = async () => {
-      const recommendation = await params.getRecommendation.execute(
-        params.child,
-        params.recommendation,
-      );
+      const recommendation: Recommendation | ReadOnlyRecommendation =
+        "recommendation" in params
+          ? await params.getRecommendation.execute(
+              params.child,
+              params.recommendation,
+            )
+          : await params.getRoRecommendation.execute(params.roToken);
       setTitle(recommendation.title);
       setReadOnlyKey(recommendation.readOnlyKey);
       setInterests(recommendation.interests);
@@ -160,6 +178,14 @@ export const ViewRecommendationPage = (
     };
     doer();
   }, []);
+
+  React.useEffect(() => {
+    if (copied) {
+      setTimeout(() => {
+        setCopied(false);
+      }, 3000);
+    }
+  }, [copied, setCopied]);
 
   const handleRankTimeCoefChange = (_: Event, newValue: number | number[]) => {
     setRankTimeCoef(newValue as number);
@@ -208,19 +234,19 @@ export const ViewRecommendationPage = (
 
   return (
     <div className="viewrecommendation-page">
-      <div>
-        <Button
-          variant="contained"
-          type="submit"
-          size="small"
-          onClick={params.backCallback}
-        >
-          Back
-        </Button>
-      </div>
+      {"backCallback" in params && (
+        <div>
+          <Button
+            variant="contained"
+            type="button"
+            size="small"
+            onClick={params.backCallback}
+          >
+            Back
+          </Button>
+        </div>
+      )}
       <h1>{title}</h1>
-      <h2>Sharebale link</h2>
-      <p>{readOnlyKey}</p>
       <h2>Child's address</h2>
       <p>{address}</p>
       <h2>Child's interests</h2>
@@ -233,8 +259,27 @@ export const ViewRecommendationPage = (
       {additionalInfo.split("\n").map((line, i) => (
         <p key={i}>{line}</p>
       ))}
+      {"baseUrl" in params && (
+        <>
+          <h2>Shareble link</h2>
+          <Stack direction="row" spacing={2}>
+            <Stack>
+              <Link
+                href={`${params.baseUrl}?ro-token=${readOnlyKey}`}
+              >{`${params.baseUrl}?ro-token=${readOnlyKey}`}</Link>
+            </Stack>
+            <CopyToClipboard
+              text={`${params.baseUrl}?ro-token=${readOnlyKey}`}
+              onCopy={() => setCopied(true)}
+            >
+              <Button variant="contained" type="button" size="small">
+                {copied ? "Copied" : "Copy to clipbboard"}
+              </Button>
+            </CopyToClipboard>
+          </Stack>
+        </>
+      )}
       <h2>Schools</h2>
-      <h3>Settings</h3>
       <Box maxWidth={"500px"}>
         <FormGroup>
           <FormControlLabel
@@ -269,9 +314,8 @@ export const ViewRecommendationPage = (
           />
         </FormGroup>
       </Box>
-      {expandedSchool === undefined && (
+      {expandedSchool === undefined && schools.length > 0 && (
         <div hidden={expandedSchool !== undefined}>
-          <h3>List</h3>
           <div className="schools-box">
             <div className="schools-list-box">
               <ul>
@@ -301,7 +345,7 @@ export const ViewRecommendationPage = (
                         <br />
                         <Button
                           variant="contained"
-                          type="submit"
+                          type="button"
                           size="small"
                           onClick={() => setExpandedShool(i)}
                         >
@@ -318,7 +362,7 @@ export const ViewRecommendationPage = (
                 <Map
                   {...cameraProps}
                   onCameraChanged={handleCameraChange}
-                  mapId={`recomendation-${params.recommendation}`}
+                  mapId={`recomendation-${"recommendation" in params ? params.recommendation : params.roToken}`}
                 >
                   <AdvancedMarker position={childCoords}>
                     <Pin
@@ -357,7 +401,7 @@ export const ViewRecommendationPage = (
           <div>
             <Button
               variant="contained"
-              type="submit"
+              type="button"
               size="small"
               onClick={() => setExpandedShool(undefined)}
             >

@@ -59,8 +59,7 @@ const buildConfig = () => {
     plugins: [
       new webpack.DefinePlugin({
         WEBPACK_CONFIG: JSON.stringify({
-          // eslint-disable-next-line no-undef
-          NODE_ENV: env,
+          NODE_ENV: ENV,
           // eslint-disable-next-line no-undef
           REFRESH_MS: process.env?.REFRESH_MS,
           // eslint-disable-next-line no-undef

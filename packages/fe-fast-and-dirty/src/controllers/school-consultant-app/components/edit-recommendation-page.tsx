@@ -144,7 +144,7 @@ export const EditRecommendationPage = (
       <div onClick={params.backCallback}>
         <Button
           variant="contained"
-          type="submit"
+          type="button"
           size="small"
           onClick={params.backCallback}
         >
@@ -260,7 +260,7 @@ export const EditRecommendationPage = (
             <Button
               variant="contained"
               id="build-recommendation"
-              type="submit"
+              type="button"
               onClick={handleBuildRecommendation}
             >
               Build Recommendation

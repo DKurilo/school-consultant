@@ -33,6 +33,8 @@ export type RecommendationInput = z.infer<typeof RecommendationInputParser>;
 
 export const ReadOnlyRecommendationParser = z.object({
   title: z.string(),
+  interests: z.array(z.string()),
+  additionalInfo: z.string(),
   address: AddressParser,
   readOnlyKey: z.string(),
   schools: z.array(SchoolParser),

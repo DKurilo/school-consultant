@@ -9,6 +9,8 @@ import { IGetChild } from "../../ports/get-child";
 import { ISaveRecommendation } from "../../ports/save-recommendation";
 import { IGetRecommendation } from "../../ports/get-recommendation";
 import { IBuildRecommendation } from "../../ports/build-recommendation";
+import { IGetRoRecommendation } from "../../ports/get-ro-recommendation";
+import { SchoolConsultantRo } from "./app_ro";
 
 export const main = (
   googleApiKey: string,
@@ -21,6 +23,7 @@ export const main = (
   saveRecommendation: ISaveRecommendation,
   getRecommendation: IGetRecommendation,
   buildRecommendation: IBuildRecommendation,
+  baseUrl: string,
 ) => {
   const root = createRoot(document.getElementById("root"));
   root.render(
@@ -35,6 +38,22 @@ export const main = (
       saveRecommendation={saveRecommendation}
       getRecommendation={getRecommendation}
       buildRecommendation={buildRecommendation}
+      baseUrl={baseUrl}
     ></SchoolConsultant>,
+  );
+};
+
+export const mainRo = (
+  googleApiKey: string,
+  getRoRecommendation: IGetRoRecommendation,
+  roToken: string,
+) => {
+  const root = createRoot(document.getElementById("root"));
+  root.render(
+    <SchoolConsultantRo
+      googleApiKey={googleApiKey}
+      getRoRecommendation={getRoRecommendation}
+      roToken={roToken}
+    />,
   );
 };

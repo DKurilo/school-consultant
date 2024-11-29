@@ -23,6 +23,7 @@ export class WebReact implements IApp {
   private saveRecommendation: ISaveRecommendation;
   private getRecommendation: IGetRecommendation;
   private buildRecommendation: IBuildRecommendation;
+  private baseUrl: string;
 
   public constructor(
     refreshInterval: number,
@@ -37,6 +38,7 @@ export class WebReact implements IApp {
     saveRecommendation: ISaveRecommendation,
     getRecommendation: IGetRecommendation,
     buildRecommendation: IBuildRecommendation,
+    baseUrl: string,
   ) {
     this.refreshInterval = refreshInterval;
     this.checkAuthInterval = checkAuthInterval;
@@ -50,6 +52,7 @@ export class WebReact implements IApp {
     this.saveRecommendation = saveRecommendation;
     this.getRecommendation = getRecommendation;
     this.buildRecommendation = buildRecommendation;
+    this.baseUrl = baseUrl;
   }
   public run(): void {
     // start token refresh process
@@ -69,6 +72,7 @@ export class WebReact implements IApp {
       this.saveRecommendation,
       this.getRecommendation,
       this.buildRecommendation,
+      this.baseUrl,
     );
   }
 }
