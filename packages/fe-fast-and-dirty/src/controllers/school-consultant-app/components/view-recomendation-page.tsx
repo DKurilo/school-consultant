@@ -266,6 +266,8 @@ export const ViewRecommendationPage = (
             <Stack>
               <Link
                 href={`${params.baseUrl}?ro-token=${readOnlyKey}`}
+                target="_blank"
+                rel="noreferrer"
               >{`${params.baseUrl}?ro-token=${readOnlyKey}`}</Link>
             </Stack>
             <CopyToClipboard

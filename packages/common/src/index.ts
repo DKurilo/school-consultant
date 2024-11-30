@@ -15,7 +15,15 @@ export {
   School,
 } from "./domains/school";
 export { TokenParser, Token } from "./domains/token";
-export { UserResponseParser, UserResponse } from "./domains/user-response";
+export {
+  UserResponseParser,
+  UserResponse,
+  userToUserResponse,
+} from "./domains/user-response";
 export { UserParser, User } from "./domains/user";
-export { ChildResponseParser, ChildResponse } from "./domains/child-response";
+export {
+  ChildResponseParser,
+  ChildResponse,
+  childToChildResponse,
+} from "./domains/child-response";
 export { Coords } from "./domains/coords";

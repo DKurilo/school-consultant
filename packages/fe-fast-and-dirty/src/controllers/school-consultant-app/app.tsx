@@ -12,6 +12,7 @@ import { IGetChild } from "../../ports/get-child";
 import { ISaveRecommendation } from "../../ports/save-recommendation";
 import { IGetRecommendation } from "../../ports/get-recommendation";
 import { IBuildRecommendation } from "../../ports/build-recommendation";
+import { StickyFooter } from "./components/footer";
 
 export type SchoolConsultantParams = {
   googleApiKey: string;
@@ -71,6 +72,7 @@ export const SchoolConsultant = (params: SchoolConsultantParams) => {
           baseUrl={params.baseUrl}
         ></Page>
       )}
+      <StickyFooter />
     </ThemeProvider>
   );
 };

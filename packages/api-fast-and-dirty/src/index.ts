@@ -59,7 +59,10 @@ const ConfigParser = z.object({
 type Config = z.infer<typeof ConfigParser>;
 
 const main = () => {
-  dotenv.config();
+  const ENV = process.env?.NODE_ENV ?? "development";
+  dotenv.config({
+    path: resolve(process.cwd(), `.env.${ENV}`),
+  });
   const conf: Config = ConfigParser.parse(process.env);
   const storagePath = conf.STORAGE_PATH.startsWith(".")
     ? resolve(__dirname, "..", conf.STORAGE_PATH)

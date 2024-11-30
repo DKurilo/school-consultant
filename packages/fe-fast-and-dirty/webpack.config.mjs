@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import HtmlWebpackPlugin from "html-webpack-plugin";
+import TerserPlugin from "terser-webpack-plugin";
 import webpack from "webpack";
 
 // eslint-disable-next-line no-undef
@@ -44,7 +45,11 @@ const buildConfig = () => {
     },
     output: {
       filename: "bundle.js",
-      path: path.resolve(__dirname, "..", "..", "dist", "fe-fast-and-dirty"),
+      path: path.resolve(__dirname, "dist"),
+    },
+    optimization: {
+      minimize: true,
+      minimizer: [new TerserPlugin()],
     },
     devServer: {
       // Enable compression

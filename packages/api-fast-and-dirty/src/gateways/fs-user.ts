@@ -1,7 +1,7 @@
 import { Buffer } from "node:buffer";
 import { join } from "node:path";
 import { readFile, writeFile } from "node:fs/promises";
-import { User, UserParser } from "@school-consultant/common/src/domains/user";
+import { User, UserParser } from "@school-consultant/common";
 import { IUserGetter } from "../ports/user-getter";
 import { ILogger } from "../ports/logger";
 import { IUserPreserver } from "../ports/user-preserver";

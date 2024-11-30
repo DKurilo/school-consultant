@@ -1,7 +1,4 @@
-import {
-  UserResponse,
-  userToUserResponse,
-} from "@school-consultant/common/src/domains/user-response";
+import { UserResponse, userToUserResponse } from "@school-consultant/common";
 import { IGetUser } from "../ports/get-user";
 import { IUserGetter } from "../ports/user-getter";
 import { ILogger } from "../ports/logger";

@@ -1,9 +1,11 @@
+import {
+  Token,
+  childToChildResponse,
+  ChildResponse,
+} from "@school-consultant/common";
 import { IUserGetter } from "../ports/user-getter";
 import { ILogger } from "../ports/logger";
 import { ITokenChecker } from "../ports/token-checker";
-import { Token } from "@school-consultant/common/src/domains/token";
-import { ChildResponse } from "@school-consultant/common";
-import { childToChildResponse } from "@school-consultant/common/src/domains/child-response";
 import { IGetChild } from "../ports/get-child";
 
 export class GetChild implements IGetChild {

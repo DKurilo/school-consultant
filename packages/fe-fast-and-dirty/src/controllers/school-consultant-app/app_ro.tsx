@@ -4,6 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import "./styles/index.css";
 import { IGetRoRecommendation } from "../../ports/get-ro-recommendation";
 import { ViewRecommendationPage } from "./components/view-recomendation-page";
+import { StickyFooter } from "./components/footer";
 
 export type SchoolConsultantRoParams = {
   googleApiKey: string;
@@ -26,6 +27,7 @@ export const SchoolConsultantRo = (params: SchoolConsultantRoParams) => {
         getRoRecommendation={params.getRoRecommendation}
         roToken={params.roToken}
       />
+      <StickyFooter />
     </ThemeProvider>
   );
 };

@@ -1,9 +1,10 @@
 import * as React from "react";
 import { z } from "zod";
 import Button from "@mui/material/Button";
-import FormControl from "@mui/material/FormControl";
 import TextField from "@mui/material/TextField";
 import "./styles/login.css";
+import Stack from "@mui/material/Stack";
+import Link from "@mui/material/Link";
 
 const ValueParser = z.object({ value: z.string() });
 
@@ -34,7 +35,7 @@ export const Login = (params: LoginParams) => {
       <div className="login-container">
         <div className="form">
           <form onSubmit={handleLogin} ref={ref}>
-            <FormControl>
+            <Stack direction="column" spacing={1}>
               <TextField
                 name="email"
                 type="email"
@@ -56,7 +57,17 @@ export const Login = (params: LoginParams) => {
               <Button variant="contained" type="submit" size="small">
                 login
               </Button>
-            </FormControl>
+              <Stack direction="row" spacing={1}>
+                <Stack>Want to try? Write email to</Stack>
+                <Link
+                  href="mailto:dkurilo@gmail.com?subject=Access%20to%20school%20consultant"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  dkurilo@gmail.com
+                </Link>
+              </Stack>
+            </Stack>
           </form>
         </div>
       </div>

@@ -2,12 +2,14 @@
   "name": "@school-consultant/common",
   "version": "1.0.0",
   "description": "common classes and functions",
-  "main": "src/index.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "test": "echo 'not implemented'",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint --fix ."
   },
   "author": "Dima Kurilo <dkurilo@gmail.com>",
-  "license": "ISC"
+  "license": "MIT"
 }

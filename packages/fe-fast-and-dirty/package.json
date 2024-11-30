@@ -3,14 +3,15 @@
   "version": "1.0.0",
   "description": "front end for school consult",
   "main": "index.js",
+  "sideEffects": false,
   "scripts": {
     "test": "echo 'not implemented'",
-    "build": "npx webpack",
+    "build": "npx webpack --stats-optimization-bailout",
     "start": "npx webpack serve",
     "lint": "eslint --fix ."
   },
-  "author": "Dima Kurilo<dkurilo@gmail.com>",
-  "license": "ISC",
+  "author": "Dima Kurilo <dkurilo@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
@@ -34,6 +35,7 @@
     "dotenv": "^16.4.5",
     "html-webpack-plugin": "^5.6.3",
     "style-loader": "^4.0.0",
+    "terser-webpack-plugin": "^5.3.10",
     "ts-loader": "^9.5.1",
     "webpack": "^5.96.1",
     "webpack-cli": "^5.1.4",

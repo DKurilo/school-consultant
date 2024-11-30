@@ -7,10 +7,12 @@
     "test": "echo 'not implemented'",
     "build": "tsc -p tsconfig.json",
     "start": "ts-node-dev --respawn --transpile-only src/index.ts",
-    "lint": "eslint --fix ."
+    "lint": "eslint --fix .",
+    "start:production": "node dist/index.js",
+    "start:production1": "pm2 start dist/index.js"
   },
-  "author": "Dima Kurilo<dkurilo@gmail.com>",
-  "license": "ISC",
+  "author": "Dima Kurilo <dkurilo@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "@fastify/cors": "^10.0.1",
     "@googlemaps/google-maps-services-js": "^3.4.0",
@@ -19,7 +21,8 @@
     "fastify": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "openai": "^4.73.0",
-    "pino": "^9.5.0"
+    "pino": "^9.5.0",
+    "pm2": "^5.4.3"
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.7",

@@ -1,10 +1,7 @@
 import { GetPublicKeyOrSecret, PublicKey, Secret, verify } from "jsonwebtoken";
 import { ILogger } from "../ports/logger";
 import { ITokenChecker } from "../ports/token-checker";
-import {
-  Token,
-  TokenParser,
-} from "@school-consultant/common/src/domains/token";
+import { Token, TokenParser } from "@school-consultant/common";
 
 const asyncVerify = (
   token: string,
