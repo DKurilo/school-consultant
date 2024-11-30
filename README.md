@@ -16,7 +16,7 @@ To add you as user run `node ./tools/generate-user.mjs your-email 1000000`. You 
 If you just want to use the system write me email to `dkurilo@gmail.com`. Each request costs money, small money for each, like building about 20 recommendations and viewing them costs me about $1.5, and the cheapest server I used costs some money as well. But I still have to pay it. 
 We can decide how you can contribute. Maybe you can improve the system, prompts, give some good recommendation, money to support the server, or to improve my moral :) . 
 The URL where the system is running right now is: https://schools.kurilo.us/
-## Exampes
+## Examples
 System allows to build and to share recommendation. Shared recommendation looks like in these examples:
 * https://schools.kurilo.us/?ro-token=dMeYcAMjiexQDcKManUynjo5mRdxdp5AxKUMRDY1dJ
 * https://schools.kurilo.us/?ro-token=AtUp8YqBwtsUr78e9s2ypeZN8c73UrhtwSIm9yruo4
