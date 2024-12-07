@@ -100,7 +100,11 @@ Description: {description}
 Reason to select: {reason to select}
 ---
 `;
-    const userPropmt = `The client's address is ${addrString}. The client has these interests: ${recommendation.interests.join(", ")}. And here is additional information to consider while preparing school list: ${recommendation.additionalInfo}`;
+    const userPropmt = `The client's address is ${addrString}. The client has these interests: ${recommendation.interests.join(", ")}. And here is additional information to consider while preparing school list:
+---
+${recommendation.additionalInfo}
+---
+`;
     const response = await this.openAIDriver.getResponse(
       recommendation.readOnlyKey,
       [

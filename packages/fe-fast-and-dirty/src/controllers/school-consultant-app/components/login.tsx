@@ -57,6 +57,13 @@ export const Login = (params: LoginParams) => {
               <Button variant="contained" type="submit" size="small">
                 login
               </Button>
+              <Link
+                  href="https://schools.kurilo.us/?ro-token=dMeYcAMjiexQDcKManUynjo5mRdxdp5AxKUMRDY1dJ"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                Check report exmple here.
+              </Link>
               <Stack direction="row" spacing={1}>
                 <Stack>Want to try? Write email to</Stack>
                 <Link

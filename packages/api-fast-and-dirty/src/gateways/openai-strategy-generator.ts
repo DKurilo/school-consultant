@@ -25,8 +25,12 @@ export class OpenaiStrategyGenerator implements IStrategyGenerator {
       "zip" in school.address
         ? `${school.address.street}, ${school.address.city}, ${school.address.state}, ${school.address.zip}`
         : school.address.addr;
-    const systemPrompt = `You are high a school education consultant that works more than 10 years mostly ${systemLocation} and have a client who wants to be in ${school.name} that is located in ${schoolAddr}`;
-    const userPropmt = `The client address is ${addrString}. The client has these interests: ${recommendation.interests.join(", ")}. And here is additional information to consider while : ${recommendation.additionalInfo}. The client wants to be in ${school.name} that is located in ${schoolAddr}. Write meaningful description for school including information about programs, student demographics, admission criteria and graduation rate. Add specific recommendation about what this kid can do to be invited to this school given his current situation.`;
+    const systemPrompt = `You are a high school education consultant with great experience specially in consulting people who lived ${systemLocation} and have a client who wants to be in ${school.name} that is located in ${schoolAddr}`;
+    const userPropmt = `My child's address is ${addrString}. And child has these interests: ${recommendation.interests.join(", ")}. And here is additional information to consider:
+---
+${recommendation.additionalInfo}
+---
+The client wants to be in ${school.name} that is located in ${schoolAddr}. Write meaningful description for school including information about programs, student demographics, admission criteria and graduation rate. Add specific recommendation about what this kid can do to be invited to this school given his current situation.`;
     const response = await this.openAIDriver.getResponse(
       recommendation.readOnlyKey,
       [

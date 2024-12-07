@@ -68,7 +68,7 @@ export const ChildPage = (params: ChildPageParams) => {
             onClick={() => handlerClickRecommendation(recommendation, status)}
             key={recommendation}
           >
-            Recommendation {recommendation} is {status}.
+            Recommendation "{recommendation}" is {status}.
             {status === "new" && " Click to Edit."}
             {status === "ready" && " Click to View."}
           </Button>

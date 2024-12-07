@@ -40,15 +40,15 @@ export const EditRecommendationPage = (
   const [showBuild, setShowBuild] = React.useState(
     params.recommendation !== undefined,
   );
-  const [title, setTitle] = React.useState<string | undefined>(undefined);
+  const [title, setTitle] = React.useState<string>("");
   const [interests, setInterests] = React.useState([]);
   const [additionalInfo, setAdditionalInfo] = React.useState<
-    string | undefined
-  >(undefined);
-  const [zip, setZip] = React.useState<string | undefined>(undefined);
-  const [street, setStreet] = React.useState<string | undefined>(undefined);
-  const [city, setCity] = React.useState<string | undefined>(undefined);
-  const [state, setState] = React.useState<string | undefined>(undefined);
+    string
+  >("");
+  const [zip, setZip] = React.useState<string>("");
+  const [street, setStreet] = React.useState<string>("");
+  const [city, setCity] = React.useState<string>("");
+  const [state, setState] = React.useState<string>("");
 
   React.useEffect(() => {
     if (params.recommendation === undefined) {
@@ -151,24 +151,20 @@ export const EditRecommendationPage = (
           Back
         </Button>
       </div>
-      <Stack direction="column">
+      <Stack direction="column" spacing={2}>
         <TextField
           name="title"
-          type="text"
           placeholder="Title"
-          margin="none"
           variant="filled"
-          hiddenLabel
-          size="small"
           value={title}
           onChange={changeTitleHandler}
           disabled={params.recommendation !== undefined}
+          label="Unique name for recommendation that you will see on the main page"
         />
         <Autocomplete
           multiple
           id="interests"
           options={commonInterests}
-          defaultValue={[]}
           onChange={(_, value) => setInterests(value)}
           freeSolo
           value={interests}
@@ -191,11 +187,15 @@ export const EditRecommendationPage = (
               {...params}
               variant="filled"
               placeholder="Child's interests"
+              label="Child's interests"
+              helperText="Select from list or type interest and press enter to add your interest"
             />
           )}
         />
         <TextField
           name="additionalInfo"
+          label="Anything you want AI know about your child"
+          helperText="Can be additional information, some requirements and so on"
           placeholder="Enter additional info"
           value={additionalInfo}
           multiline

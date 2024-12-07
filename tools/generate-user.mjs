@@ -19,7 +19,7 @@ const main = async () => {
     attemptsLeft,
   };
   writeFile(filePath, JSON.stringify(user, null, '  '));
-  console.log(`password for user ${email} is ${password}`);
+  console.log(`password for user ${email} is ${password}, user saved in ${fileName}`);
 }
 
 main();

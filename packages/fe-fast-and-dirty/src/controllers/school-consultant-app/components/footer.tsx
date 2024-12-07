@@ -6,15 +6,12 @@ import Link from "@mui/material/Link";
 export const StickyFooter = () => {
   return (
     <Stack direction="row" spacing={1} id="sticky-footer">
-      <Stack>Created by</Stack>
-      <Link href="mailto:dkurilo@gmail.com">Dima Kurilo</Link>
-      <Stack>Github:</Stack>
       <Link
         href="https://github.com/DKurilo/school-consultant"
         target="_blank"
         rel="noreferrer"
       >
-        https://github.com/DKurilo/school-consultant
+        Github
       </Link>
       <Stack>Please, read</Stack>
       <Link
