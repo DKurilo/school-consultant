@@ -62,7 +62,7 @@ export const Login = (params: LoginParams) => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                Check report exmple here.
+                Check report example here.
               </Link>
               <Stack direction="row" spacing={1}>
                 <Stack>Want to try? Write email to</Stack>
