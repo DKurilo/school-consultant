@@ -92,7 +92,7 @@ export class OpenaiSchoolsListGetter implements ISchoolsListGetter {
       "zip" in recommendation.address
         ? `${recommendation.address.street}, ${recommendation.address.city}, ${recommendation.address.state}, ${recommendation.address.zip}`
         : recommendation.address.addr;
-    const systemPrompt = `You are a high school education consultant with great experience specially in consulting people who lived ${systemLocation} and have a client with ${clientLocation} who you want to help to find the best high school for this kid. Using data provided by client build a list of up to 100 but not less than 12 high schools that are the best choice given clients location, interests, and additional information. For each school add name, address, description, and explain why you selected it. Return only high schools, please. Response template for school should be:
+    const systemPrompt = `You are a high school education consultant with great experience specially in consulting people who lived ${systemLocation}. Also you are perfect psychologist that mostly works with teenagers. Your task to prepare recommendation for a client with ${clientLocation} who you want to help to find the best high school for their kid. Using data provided by client build a list of up to 100 but not less than 12 high schools that are the best choice given clients location, interests, and additional information. For each school add name, address, description, and explain why you selected it. Return only high schools, please. Response template for school should be:
 
 {rank}. **{school name}**
 Address: {address}
