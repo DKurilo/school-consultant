@@ -58,7 +58,7 @@ export const Login = (params: LoginParams) => {
                 login
               </Button>
               <Link
-                  href="https://schools.kurilo.us/?ro-token=dMeYcAMjiexQDcKManUynjo5mRdxdp5AxKUMRDY1dJ"
+                  href="https://schools.kurilo.us/?ro-token=eAD8pzvtUsIyKm8LwgKxHR2n2tBgNRapLgLQaUAz19"
                   target="_blank"
                   rel="noreferrer"
                 >
