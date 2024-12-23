@@ -21,7 +21,8 @@
   "workspaces": [
     "packages/common",
     "packages/fe-fast-and-dirty",
-    "packages/api-fast-and-dirty"
+    "packages/api-fast-and-dirty",
+    "packages/all-schools-builder"
   ],
   "author": "Dima Kurilo <dkurilo@gmail.com>",
   "license": "MIT",

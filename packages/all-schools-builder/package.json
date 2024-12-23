@@ -1,0 +1,32 @@
+{
+  "name": "all-schools-builder",
+  "version": "1.0.0",
+  "description": "Small tool to build Excel file that contains all the school",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo 'not implemented'",
+    "build": "tsc -p tsconfig.json",
+    "start": "ts-node-dev --transpile-only src/index.ts",
+    "lint": "eslint --fix .",
+    "start:production": "node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DKurilo/school-consultant.git"
+  },
+  "author": "Dima Kurilo <dkurilo@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DKurilo/school-consultant/issues"
+  },
+  "homepage": "https://github.com/DKurilo/school-consultant#readme",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.7",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "ts-node-dev": "^2.0.0"
+  }
+}
