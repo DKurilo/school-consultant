@@ -5,3 +5,9 @@ packages/api-fast-and-dirty/storage/**/*
 !packages/api-fast-and-dirty/storage/recommendations/.gitkeep
 **/.env
 **/.env.*
+!**/.env.example
+packages/all-schools-builder/exports/**/*
+!packages/all-schools-builder/exports/.gitkeep
+!packages/all-schools-builder/exports/public/.gitkeep
+!packages/all-schools-builder/exports/json/.gitkeep
+!packages/all-schools-builder/exports/json/active/.gitkeep

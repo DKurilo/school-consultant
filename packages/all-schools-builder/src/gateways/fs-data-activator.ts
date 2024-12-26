@@ -12,14 +12,30 @@ export class FsDataActivator implements IDataActivator {
     this.activePrefix = activePrefix;
   }
 
+  private async deletePathNoError(p: string): Promise<void> {
+    try {
+      fs.rm(p, { recursive: true, force: true });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   public async activate(prefix: string): Promise<[string, Promise<void>]> {
     const tempName = await generateName();
     const tempPath = path.join(this.storagePath, tempName);
     const activePath = path.join(this.storagePath, this.activePrefix);
     const newPath = path.join(this.storagePath, prefix);
-    await fs.rename(activePath, tempPath);
+    try {
+      await fs.rename(activePath, tempPath);
+    } catch (e) {
+      console.log(e);
+    }
     await fs.rename(newPath, activePath);
-    const deletePromise = fs.rm(tempPath, { recursive: true, force: true });
+    const deletePromise = this.deletePathNoError(tempPath);
     return [this.activePrefix, deletePromise];
+  }
+
+  public getActivePrefix(): string {
+    return this.activePrefix;
   }
 }

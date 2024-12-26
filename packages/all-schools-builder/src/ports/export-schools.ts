@@ -1,3 +1,3 @@
 export interface IExportSchools {
-  execute: () => Promise<void>;
+  execute: (doNotLoadData: boolean) => Promise<void>;
 }

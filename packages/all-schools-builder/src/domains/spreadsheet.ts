@@ -3,7 +3,7 @@ import z from "zod";
 export const spreadsheetHeaders = {
   zone: "Zone/District",
   name: "School Name",
-  dbn: "DBN (District Borough Number",
+  dbn: "DBN (District Borough Number)",
   link: "Link",
   threeK: "3K",
   preK: "Pre-K",

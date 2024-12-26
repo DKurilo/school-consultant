@@ -9,6 +9,7 @@ export class Console implements IApp {
   }
 
   public async run() {
-    await this.exportSchoolsUsecase.execute();
+    const doNotLoadData: boolean = process.argv.includes("--no-load")
+    await this.exportSchoolsUsecase.execute(doNotLoadData);
   }
 }

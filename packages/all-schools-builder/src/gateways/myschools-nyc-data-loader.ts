@@ -9,11 +9,11 @@ const SchoolParser = z
     school: z
       .object({
         dbn: z.string(),
-      })
-      .passthrough(),
-    district: z
-      .object({
-        code: z.string(),
+        district: z
+          .object({
+            code: z.string(),
+          })
+          .passthrough(),
       })
       .passthrough(),
   })
@@ -41,13 +41,12 @@ export class MyschoolsNycDataLoader implements IDataLoader {
     while (url !== null) {
       const currentUrl = url;
       const results = await this.queue(() => axios.get(currentUrl));
-      console.log(currentUrl, results.data.results);
       const parsedResults = DataParser.parse(results.data);
       url = parsedResults.next;
       for (const school of parsedResults.results) {
         yield {
           name: school.name,
-          zone: school.district.code,
+          zone: school.school.district.code,
           dbn: school.school.dbn,
           raw: school,
         };

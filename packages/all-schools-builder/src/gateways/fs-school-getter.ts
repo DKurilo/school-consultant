@@ -15,8 +15,8 @@ export class FsSchoolGetter implements ISchoolGetter {
     const fileIterator = await fs.opendir(schoolsPath);
     let ent = await fileIterator.read();
     while (ent !== null) {
-      if (ent.isFile() && path.extname(ent.name) === "json") {
-        yield path.basename(ent.name).slice(0, -4);
+      if (ent.isFile() && path.extname(ent.name) === ".json") {
+        yield path.basename(ent.name).slice(0, -5);
       }
       ent = await fileIterator.read();
     }
@@ -28,7 +28,12 @@ export class FsSchoolGetter implements ISchoolGetter {
     dbn: string,
   ): Promise<SchoolInfo | undefined> {
     const schoolPath = path.join(this.storagePath, prefix, `${dbn}.json`);
-    const content = await fs.readFile(schoolPath, "utf8");
-    return SchoolInfoParser.parse(content);
+    try {
+      const content = await fs.readFile(schoolPath, "utf8");
+      return SchoolInfoParser.parse(JSON.parse(content));
+    } catch (e) {
+      console.log(e);
+      return undefined;
+    }
   }
 }

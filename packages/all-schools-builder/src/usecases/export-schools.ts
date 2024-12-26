@@ -79,12 +79,20 @@ export class ExportSchools implements IExportSchools {
     return schoolInfoToSpreadsheetRow(schoolInfo, this.linkPrefix);
   }
 
-  public async execute() {
+  private async loadData(doNotLoadData: boolean): Promise<[string, Promise<void>]> {
+    if (doNotLoadData) {
+      return [this.dataActivator.getActivePrefix(), Promise.resolve()];
+    }
     const tempPrefix = await generateName();
     await this.loadPartialSchool(this.threeKDataLoader, "threeK", tempPrefix);
     await this.loadPartialSchool(this.preKDataLoader, "preK", tempPrefix);
     await this.loadPartialSchool(this.kDataLoader, "k", tempPrefix);
     const [prefix, postProcess] = await this.dataActivator.activate(tempPrefix);
+    return [prefix, postProcess]
+  }
+
+  public async execute(doNotLoadData: boolean) {
+    const [prefix, postProcess] = await this.loadData(doNotLoadData);
     const spreadsheetDataPromises: Promise<SpreadsheetRow | undefined>[] = [];
     for await (const dbn of this.schoolGetter.list(prefix)) {
       spreadsheetDataPromises.push(this.buildSpreadsheetRow(prefix, dbn));
