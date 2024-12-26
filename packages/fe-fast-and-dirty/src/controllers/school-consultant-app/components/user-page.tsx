@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import { IAddChild } from "../../../ports/add-child";
 import "./styles/user-page.css";
 import Stack from "@mui/material/Stack";
+import Link from "@mui/material/Link";
 
 export type UserPageParams = {
   getUser: IGetUser;
@@ -57,6 +58,11 @@ export const UserPage = (params: UserPageParams) => {
           more recommendations.
         </p>
       )}
+      <Stack direction="row" spacing={1}>
+        <Link href="/schools/nyc-3k-prek-k-schools.xlsx">List of 3K, Pre-K, and K schools of NYC.</Link>
+        <Stack>List compiled from </Stack>
+        <Link href="https://myschools.nyc/" target="_blank" rel="noreferrer">myschools.nyc</Link>
+      </Stack>
       <h1>Children</h1>
       <Stack direction="column" spacing={1} alignItems="start">
         {Object.entries(children).map(([child, n]) => (

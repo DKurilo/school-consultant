@@ -13,7 +13,7 @@ export const StickyFooter = () => {
       >
         Github
       </Link>
-      <Stack>Please, read</Stack>
+      <Stack>Read</Stack>
       <Link
         href="https://github.com/DKurilo/school-consultant/blob/main/README.md"
         target="_blank"
@@ -21,6 +21,7 @@ export const StickyFooter = () => {
       >
         README
       </Link>
+      <Stack>, please!</Stack>
     </Stack>
   );
 };

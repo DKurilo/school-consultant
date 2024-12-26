@@ -74,6 +74,13 @@ export const Login = (params: LoginParams) => {
                   dkurilo@gmail.com
                 </Link>
               </Stack>
+              <Stack direction="row" spacing={1}>
+                <Link href="/schools/nyc-3k-prek-k-schools.xlsx">List of 3K, Pre-K, and K schools of NYC.</Link>
+              </Stack>
+              <Stack direction="row" spacing={1}>
+                <Stack>List compiled from </Stack>
+                <Link href="https://myschools.nyc/" target="_blank" rel="noreferrer">myschools.nyc</Link>
+              </Stack>
             </Stack>
           </form>
         </div>
