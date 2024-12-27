@@ -80,14 +80,14 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
       };
       // mapLink
       if (s.mapLink) {
-        row.getCell(7).value = {
+        row.getCell(8).value = {
           text: s.mapLink,
           hyperlink: s.mapLink,
         };
       }
       // email
       if (s.email) {
-        row.getCell(8).value = {
+        row.getCell(9).value = {
           text: s.email,
           hyperlink: `mailto:${s.email}`,
         };
