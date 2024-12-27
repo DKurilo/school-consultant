@@ -30,9 +30,10 @@ export class MyschoolsNycDataLoader implements IDataLoader {
       url = parsedResults.next;
       for (const school of parsedResults.results) {
         yield {
-          name: school.name,
           borough: school.school.district.borough,
           zone: school.school.district.code,
+          name: school.name,
+          gradesDescription: school.grades_description,
           dbn: school.school.dbn,
           address: school.school.full_address ?? undefined,
           latitude: school.school.address?.latitude ?? undefined,

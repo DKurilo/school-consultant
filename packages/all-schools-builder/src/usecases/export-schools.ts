@@ -21,6 +21,19 @@ export type ExportSchoolsOption = {
   mapPreserver: IMapPreserver;
 };
 
+const buildGradesDescription = (oldDescr: string, newDescr: string): string => {
+  if (oldDescr === newDescr || oldDescr.includes(newDescr)) {
+    return oldDescr;
+  }
+  if (oldDescr === "") {
+    return newDescr;
+  }
+  if (newDescr === "") {
+    return oldDescr;
+  }
+  return `${oldDescr}, ${newDescr}`;
+}
+
 export class ExportSchools implements IExportSchools {
   private linkPrefix: string;
   private threeKDataLoader: IDataLoader;
@@ -56,6 +69,7 @@ export class ExportSchools implements IExportSchools {
           borough: school.borough,
           zone: school.zone,
           name: school.name,
+          gradesDescription: school.gradesDescription,
           dbn: school.dbn,
           address: school.address,
           latitude: school.latitude,
@@ -68,8 +82,10 @@ export class ExportSchools implements IExportSchools {
         };
         await this.schoolPreserver.preserve(prefix, schoolInfo);
       } else {
+        const gradesDescription = buildGradesDescription(school.gradesDescription, existingSchool.gradesDescription);
         await this.schoolPreserver.preserve(prefix, {
           ...existingSchool,
+          gradesDescription,
           address: existingSchool.address ?? school.address,
           latitude: existingSchool.latitude ?? school.latitude,
           longitude: existingSchool.longitude ?? school.longitude,
@@ -131,7 +147,7 @@ export class ExportSchools implements IExportSchools {
         return a.zone > b.zone ? 1 : -1;
       }
       return a.borough > b.borough ? 1 : -1;
-    })
+    });
     await Promise.all([
       this.spreadsheetPreserver.preserve(spreadsheetData),
       this.mapPreserver.preserve(spreadsheetData),

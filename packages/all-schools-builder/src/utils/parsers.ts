@@ -23,9 +23,10 @@ export const SchoolParser = z
         full_address: z.string().optional().nullable(),
       })
       .passthrough(),
-      email: z.string().optional().nullable(),
-      telephone: z.string().optional().nullable(),
-      independent_website: z.string().optional().nullable(),
-      uniform: z.boolean().optional().nullable(),
+    email: z.string().optional().nullable(),
+    telephone: z.string().optional().nullable(),
+    independent_website: z.string().optional().nullable(),
+    uniform: z.boolean().optional().nullable(),
+    grades_description: z.string(),
   })
   .passthrough();

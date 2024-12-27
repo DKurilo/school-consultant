@@ -35,9 +35,10 @@ export class FsDataLoader implements IDataLoader {
         const school = json[this.schoolType];
         if (school !== undefined) {
           yield {
-            name: school.name,
             borough: school.school.district.borough,
             zone: school.school.district.code,
+            name: school.name,
+            gradesDescription: school.grades_description,
             dbn: school.school.dbn,
             address: school.school.full_address ?? undefined,
             latitude: school.school.address?.latitude ?? undefined,

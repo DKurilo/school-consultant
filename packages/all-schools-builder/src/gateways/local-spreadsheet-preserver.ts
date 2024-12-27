@@ -25,7 +25,9 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
       views: [{ state: "frozen", ySplit: 1 }],
     });
 
-    const colWidths = [14, 14, 30, 30, 30, 30, 30, 15, 15, 20, 12, 12, 12, 12];
+    const colWidths = [
+      14, 14, 30, 14, 30, 30, 30, 30, 15, 15, 20, 12, 12, 12, 12,
+    ];
     sheet.columns = Object.entries(spreadsheetHeaders).map(([k, v], i) => ({
       header: v,
       key: k,
@@ -47,6 +49,7 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
           borough: s.borough,
           zone: s.zone,
           name: s.name,
+          gradesDescription: s.gradesDescription,
           dbn: s.dbn,
           link: s.link,
           address: s.address ?? "",
@@ -66,10 +69,12 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
       row.getCell(1).alignment = { horizontal: "center" };
       // zone
       row.getCell(2).alignment = { horizontal: "center" };
-      // dbn
+      // gradesDescription
       row.getCell(4).alignment = { horizontal: "center" };
+      // dbn
+      row.getCell(5).alignment = { horizontal: "center" };
       // link
-      row.getCell(5).value = {
+      row.getCell(6).value = {
         text: s.link,
         hyperlink: s.link,
       };
@@ -89,19 +94,19 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
       }
       // website
       if (s.website && s.website.length > 0) {
-        row.getCell(10).value = {
+        row.getCell(11).value = {
           text: s.website,
           hyperlink: prepareWebsite(s.website),
         };
       }
       // uniform
-      row.getCell(11).alignment = { horizontal: "center" };
-      // threeK
       row.getCell(12).alignment = { horizontal: "center" };
-      // preK
+      // threeK
       row.getCell(13).alignment = { horizontal: "center" };
-      // k
+      // preK
       row.getCell(14).alignment = { horizontal: "center" };
+      // k
+      row.getCell(15).alignment = { horizontal: "center" };
 
       if (s.threeK && s.preK && s.k) {
         row.fill = {
@@ -111,7 +116,7 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
         };
       }
     });
-    sheet.autoFilter = "A1:N1";
+    sheet.autoFilter = "A1:O1";
 
     const stream = await fs.open(this.spreadsheetPath, "w");
     await book.xlsx.write(stream.createWriteStream());
