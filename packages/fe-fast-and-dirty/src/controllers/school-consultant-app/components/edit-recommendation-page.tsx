@@ -42,9 +42,7 @@ export const EditRecommendationPage = (
   );
   const [title, setTitle] = React.useState<string>("");
   const [interests, setInterests] = React.useState([]);
-  const [additionalInfo, setAdditionalInfo] = React.useState<
-    string
-  >("");
+  const [additionalInfo, setAdditionalInfo] = React.useState<string>("");
   const [zip, setZip] = React.useState<string>("");
   const [street, setStreet] = React.useState<string>("");
   const [city, setCity] = React.useState<string>("");

@@ -16,6 +16,7 @@ import { ISpreadsheetPreserver } from "./ports/spreadsheet-preserver";
 import { LocalSpreadsheetPreserver } from "./gateways/local-spreadsheet-preserver";
 import { IMapPreserver } from "./ports/map-preserver";
 import { FsMapPreserver } from "./gateways/fs-map-preserver";
+import { FsDataLoader } from "./gateways/fs-data-loader";
 
 const ConfigParser = z.object({
   SCHOOLS_3K_SOURCE_URL: z.string(),
@@ -89,7 +90,33 @@ const main = async () => {
     spreadsheetPreserver,
     mapPreserver,
   });
-  const app = new Console(exportSchoolsUsecase);
+  const threeKFsDataLoader: IDataLoader = new FsDataLoader(
+    conf.JSON_DESTINATION_FOLDER,
+    conf.JSON_ACTIVE_PREFIX,
+    "threeK",
+  );
+  const preKFsDataLoader: IDataLoader = new FsDataLoader(
+    conf.JSON_DESTINATION_FOLDER,
+    conf.JSON_ACTIVE_PREFIX,
+    "preK",
+  );
+  const kFsDataLoader: IDataLoader = new FsDataLoader(
+    conf.JSON_DESTINATION_FOLDER,
+    conf.JSON_ACTIVE_PREFIX,
+    "k",
+  );
+  const exportTransformSchoolsUsecase = new ExportSchools({
+    linkPrefix: conf.MYSCHOOLS_NYC_LINK_PREFIX,
+    threeKDataLoader: threeKFsDataLoader,
+    preKDataLoader: preKFsDataLoader,
+    kDataLoader: kFsDataLoader,
+    schoolGetter,
+    schoolPreserver,
+    dataActivator,
+    spreadsheetPreserver,
+    mapPreserver,
+  });
+  const app = new Console(exportSchoolsUsecase, exportTransformSchoolsUsecase);
   await app.run();
 };
 

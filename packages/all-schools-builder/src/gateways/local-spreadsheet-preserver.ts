@@ -3,6 +3,15 @@ import Excel from "exceljs";
 import { spreadsheetHeaders, SpreadsheetRow } from "../domains/spreadsheet";
 import { ISpreadsheetPreserver } from "../ports/spreadsheet-preserver";
 
+const boolToYesNo = (v: boolean): string => (v ? "yes" : "no");
+
+const prepareWebsite = (v: string): string => {
+  if (v.startsWith("http")) {
+    return v;
+  }
+  return `https://${v}`;
+};
+
 export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
   private spreadsheetPath: string;
 
@@ -16,7 +25,7 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
       views: [{ state: "frozen", ySplit: 1 }],
     });
 
-    const colWidths = [14, 30, 30, 30, 12, 12, 12];
+    const colWidths = [14, 14, 30, 30, 30, 30, 30, 15, 15, 20, 12, 12, 12, 12];
     sheet.columns = Object.entries(spreadsheetHeaders).map(([k, v], i) => ({
       header: v,
       key: k,
@@ -35,27 +44,74 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
     schools.forEach((s, i) => {
       sheet.addRow(
         {
+          borough: s.borough,
           zone: s.zone,
           name: s.name,
           dbn: s.dbn,
           link: s.link,
-          threeK: s.threeK ? "yes" : "no",
-          preK: s.preK ? "yes" : "no",
-          k: s.k ? "yes" : "no",
+          address: s.address ?? "",
+          mapLink: s.mapLink ?? "",
+          email: s.email ?? "",
+          phone: s.phone ?? "",
+          website: s.website ?? "",
+          uniform: s.uniform === undefined ? "" : boolToYesNo(s.uniform),
+          threeK: boolToYesNo(s.threeK),
+          preK: boolToYesNo(s.preK),
+          k: boolToYesNo(s.k),
         },
         "n",
       );
-      sheet.getRow(i + 2).getCell(1).alignment = { horizontal: "center" };
-      sheet.getRow(i + 2).getCell(3).alignment = { horizontal: "center" };
-      sheet.getRow(i + 2).getCell(4).value = {
+      const row = sheet.getRow(i + 2);
+      // borough
+      row.getCell(1).alignment = { horizontal: "center" };
+      // zone
+      row.getCell(2).alignment = { horizontal: "center" };
+      // dbn
+      row.getCell(4).alignment = { horizontal: "center" };
+      // link
+      row.getCell(5).value = {
         text: s.link,
         hyperlink: s.link,
       };
-      sheet.getRow(i + 2).getCell(5).alignment = { horizontal: "center" };
-      sheet.getRow(i + 2).getCell(6).alignment = { horizontal: "center" };
-      sheet.getRow(i + 2).getCell(7).alignment = { horizontal: "center" };
-    }, "n");
-    sheet.autoFilter = "A1:G1";
+      // mapLink
+      if (s.mapLink) {
+        row.getCell(7).value = {
+          text: s.mapLink,
+          hyperlink: s.mapLink,
+        };
+      }
+      // email
+      if (s.email) {
+        row.getCell(8).value = {
+          text: s.email,
+          hyperlink: `mailto:${s.email}`,
+        };
+      }
+      // website
+      if (s.website && s.website.length > 0) {
+        row.getCell(10).value = {
+          text: s.website,
+          hyperlink: prepareWebsite(s.website),
+        };
+      }
+      // uniform
+      row.getCell(11).alignment = { horizontal: "center" };
+      // threeK
+      row.getCell(12).alignment = { horizontal: "center" };
+      // preK
+      row.getCell(13).alignment = { horizontal: "center" };
+      // k
+      row.getCell(14).alignment = { horizontal: "center" };
+
+      if (s.threeK && s.preK && s.k) {
+        row.fill = {
+          type: "pattern",
+          pattern: "solid",
+          fgColor: { argb: "ffffbf00" },
+        };
+      }
+    });
+    sheet.autoFilter = "A1:N1";
 
     const stream = await fs.open(this.spreadsheetPath, "w");
     await book.xlsx.write(stream.createWriteStream());

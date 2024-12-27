@@ -2,22 +2,7 @@ import z from "zod";
 import { SingleSourceSchoolInfo } from "../domains/school-info";
 import { IDataLoader } from "../ports/data-loader";
 import axios from "axios";
-
-const SchoolParser = z
-  .object({
-    name: z.string(),
-    school: z
-      .object({
-        dbn: z.string(),
-        district: z
-          .object({
-            code: z.string(),
-          })
-          .passthrough(),
-      })
-      .passthrough(),
-  })
-  .passthrough();
+import { SchoolParser } from "../utils/parsers";
 
 const DataParser = z.object({
   next: z.string().nullable(),
@@ -46,8 +31,16 @@ export class MyschoolsNycDataLoader implements IDataLoader {
       for (const school of parsedResults.results) {
         yield {
           name: school.name,
+          borough: school.school.district.borough,
           zone: school.school.district.code,
           dbn: school.school.dbn,
+          address: school.school.full_address ?? undefined,
+          latitude: school.school.address?.latitude ?? undefined,
+          longitude: school.school.address?.longitude ?? undefined,
+          email: school.email ?? undefined,
+          phone: school.telephone ?? undefined,
+          website: school.independent_website ?? undefined,
+          uniform: school.uniform ?? undefined,
           raw: school,
         };
       }

@@ -31,7 +31,7 @@ export class FsSchoolGetter implements ISchoolGetter {
     try {
       const content = await fs.readFile(schoolPath, "utf8");
       return SchoolInfoParser.parse(JSON.parse(content));
-    } catch (_) {
+    } catch {
       return undefined;
     }
   }

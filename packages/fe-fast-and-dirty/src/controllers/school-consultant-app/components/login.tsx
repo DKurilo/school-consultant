@@ -58,10 +58,10 @@ export const Login = (params: LoginParams) => {
                 login
               </Button>
               <Link
-                  href="https://schools.kurilo.us/?ro-token=eAD8pzvtUsIyKm8LwgKxHR2n2tBgNRapLgLQaUAz19"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                href="https://schools.kurilo.us/?ro-token=eAD8pzvtUsIyKm8LwgKxHR2n2tBgNRapLgLQaUAz19"
+                target="_blank"
+                rel="noreferrer"
+              >
                 Check report example here.
               </Link>
               <Stack direction="row" spacing={1}>
@@ -75,11 +75,19 @@ export const Login = (params: LoginParams) => {
                 </Link>
               </Stack>
               <Stack direction="row" spacing={1}>
-                <Link href="/schools/nyc-3k-prek-k-schools.xlsx">List of 3K, Pre-K, and K schools of NYC.</Link>
+                <Link href="/schools/nyc-3k-prek-k-schools.xlsx">
+                  List of 3K, Pre-K, and K schools of NYC.
+                </Link>
               </Stack>
               <Stack direction="row" spacing={1}>
                 <Stack>List compiled from </Stack>
-                <Link href="https://myschools.nyc/" target="_blank" rel="noreferrer">myschools.nyc</Link>
+                <Link
+                  href="https://myschools.nyc/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  myschools.nyc
+                </Link>
               </Stack>
             </Stack>
           </form>

@@ -53,15 +53,33 @@ export class ExportSchools implements IExportSchools {
       const existingSchool = await this.schoolGetter.load(prefix, school.dbn);
       if (existingSchool === undefined) {
         const schoolInfo: SchoolInfo = {
+          borough: school.borough,
           zone: school.zone,
           name: school.name,
           dbn: school.dbn,
+          address: school.address,
+          latitude: school.latitude,
+          longitude: school.longitude,
+          email: school.email,
+          phone: school.phone,
+          website: school.website,
+          uniform: school.uniform,
           [key]: school.raw,
         };
         await this.schoolPreserver.preserve(prefix, schoolInfo);
       } else {
         await this.schoolPreserver.preserve(prefix, {
           ...existingSchool,
+          address: existingSchool.address ?? school.address,
+          latitude: existingSchool.latitude ?? school.latitude,
+          longitude: existingSchool.longitude ?? school.longitude,
+          email: existingSchool.email ?? school.email,
+          phone: existingSchool.phone ?? school.phone,
+          website: existingSchool.website ?? school.website,
+          uniform:
+            existingSchool.uniform === undefined
+              ? school.uniform
+              : existingSchool.uniform,
           [key]: school.raw,
         });
       }
@@ -79,7 +97,9 @@ export class ExportSchools implements IExportSchools {
     return schoolInfoToSpreadsheetRow(schoolInfo, this.linkPrefix);
   }
 
-  private async loadData(doNotLoadData: boolean): Promise<[string, Promise<void>]> {
+  private async loadData(
+    doNotLoadData: boolean,
+  ): Promise<[string, Promise<void>]> {
     if (doNotLoadData) {
       return [this.dataActivator.getActivePrefix(), Promise.resolve()];
     }
@@ -88,7 +108,7 @@ export class ExportSchools implements IExportSchools {
     await this.loadPartialSchool(this.preKDataLoader, "preK", tempPrefix);
     await this.loadPartialSchool(this.kDataLoader, "k", tempPrefix);
     const [prefix, postProcess] = await this.dataActivator.activate(tempPrefix);
-    return [prefix, postProcess]
+    return [prefix, postProcess];
   }
 
   public async execute(doNotLoadData: boolean) {
@@ -100,6 +120,18 @@ export class ExportSchools implements IExportSchools {
     const spreadsheetData: SpreadsheetRow[] = (
       await Promise.all(spreadsheetDataPromises)
     ).filter((x) => x !== undefined);
+    spreadsheetData.sort((a, b) => {
+      if (a.borough === b.borough) {
+        if (a.zone === b.zone) {
+          if (a.name === b.name) {
+            return 0;
+          }
+          return a.name > b.name ? 1 : -1;
+        }
+        return a.zone > b.zone ? 1 : -1;
+      }
+      return a.borough > b.borough ? 1 : -1;
+    })
     await Promise.all([
       this.spreadsheetPreserver.preserve(spreadsheetData),
       this.mapPreserver.preserve(spreadsheetData),
