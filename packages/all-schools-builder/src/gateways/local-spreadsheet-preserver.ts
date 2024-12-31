@@ -116,7 +116,7 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
         };
       }
     });
-    sheet.autoFilter = "A1:O1";
+    sheet.autoFilter = `A1:O${sheet.actualRowCount}`;
 
     const stream = await fs.open(this.spreadsheetPath, "w");
     await book.xlsx.write(stream.createWriteStream());
