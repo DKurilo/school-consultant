@@ -20,8 +20,12 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
   }
 
   public async preserve(schools: SpreadsheetRow[]): Promise<void> {
+    const now = new Date();
+    const nowDate = `0${now.getDate()}`.slice(-2);
+    const nowMonth = `0${now.getMonth() + 1}`.slice(-2);
+    const sheetDate = `${now.getFullYear()}${nowMonth}${nowDate}`;
     const book = new Excel.Workbook();
-    const sheet = book.addWorksheet("NYC-3K-PreK-K-Schools", {
+    const sheet = book.addWorksheet(`NYC-3K-PreK-K-Schools ${sheetDate}`, {
       views: [{ state: "frozen", ySplit: 1 }],
     });
 

@@ -32,7 +32,7 @@ const buildGradesDescription = (oldDescr: string, newDescr: string): string => {
     return oldDescr;
   }
   return `${oldDescr}, ${newDescr}`;
-}
+};
 
 export class ExportSchools implements IExportSchools {
   private linkPrefix: string;
@@ -82,7 +82,10 @@ export class ExportSchools implements IExportSchools {
         };
         await this.schoolPreserver.preserve(prefix, schoolInfo);
       } else {
-        const gradesDescription = buildGradesDescription(school.gradesDescription, existingSchool.gradesDescription);
+        const gradesDescription = buildGradesDescription(
+          school.gradesDescription,
+          existingSchool.gradesDescription,
+        );
         await this.schoolPreserver.preserve(prefix, {
           ...existingSchool,
           gradesDescription,
