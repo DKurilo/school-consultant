@@ -1,15 +1,20 @@
 import fs from "node:fs/promises";
+import { URL } from "node:url";
 import Excel from "exceljs";
 import { spreadsheetHeaders, SpreadsheetRow } from "../domains/spreadsheet";
 import { ISpreadsheetPreserver } from "../ports/spreadsheet-preserver";
 
 const boolToYesNo = (v: boolean): string => (v ? "yes" : "no");
 
-const prepareWebsite = (v: string): string => {
-  if (v.startsWith("http")) {
-    return v;
+const prepareWebsite = (v: string): string | undefined => {
+  const vSmall = v.toLowerCase().trim();
+  const vPrepared = vSmall.startsWith("http") ? vSmall : `https://${vSmall}`;
+  try {
+    new URL(vPrepared);
+    return vPrepared;
+  } catch {
+    return undefined;
   }
-  return `https://${v}`;
 };
 
 export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
@@ -98,10 +103,15 @@ export class LocalSpreadsheetPreserver implements ISpreadsheetPreserver {
       }
       // website
       if (s.website && s.website.length > 0) {
-        row.getCell(11).value = {
-          text: s.website,
-          hyperlink: prepareWebsite(s.website),
-        };
+        const hyperlink = prepareWebsite(s.website);
+        if (hyperlink !== undefined) {
+          row.getCell(11).value = {
+            text: s.website,
+            hyperlink,
+          };
+        } else {
+          row.getCell(11).value = s.website;
+        }
       }
       // uniform
       row.getCell(12).alignment = { horizontal: "center" };
